@@ -23,7 +23,7 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
         driver.get("http://google.com");
 
         assertThat(driver.getCurrentUrl()).contains("google");
-        driver.close();
+        firefoxFactory.returnWebDriver(driver);
     }
 
     @Test
