@@ -1,0 +1,6 @@
+     
+info.app.name: spider
+
+spring.application.name: ${info.app.name}
+
+    
