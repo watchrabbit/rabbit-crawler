@@ -21,3 +21,6 @@ hs_err_pid*
 /crawler-auth/nb-configuration.xml
 /target/
 /crawler-api/target/
+/crawler-api/nb-configuration.xml
+/crawler-manager/nb-configuration.xml
+/crawler-executor/nb-configuration.xml

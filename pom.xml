@@ -10,6 +10,8 @@
         <module>crawler-driver</module>
         <module>crawler-auth</module>
         <module>crawler-api</module>
+        <module>crawler-manager</module>
+        <module>crawler-executor</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
