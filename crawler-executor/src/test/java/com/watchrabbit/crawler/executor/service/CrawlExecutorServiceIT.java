@@ -17,9 +17,16 @@ package com.watchrabbit.crawler.executor.service;
 
 import com.watchrabbit.crawler.api.AuthData;
 import com.watchrabbit.crawler.api.CrawlForm;
+import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.auth.service.AuthService;
 import com.watchrabbit.crawler.executor.ContextTestBase;
+import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -34,6 +41,14 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    ManagerServiceFacade managerServiceFacade;
+
+    @Before
+    public void init() {
+        reset(managerServiceFacade);
+    }
+
     @Test
     public void shouldCollectLinks() {
         crawlExecutorService.processPage(new CrawlForm.Builder()
@@ -41,6 +56,11 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
                 .withUrl("https://scalingapp.com")
                 .build()
         );
+
+        ArgumentCaptor<CrawlResult> argumentCaptor = ArgumentCaptor.forClass(CrawlResult.class);
+        verify(managerServiceFacade).consumeResult(argumentCaptor.capture());
+
+        assertThat(argumentCaptor.getValue().getLinks()).isNotEmpty();
     }
 
     @Test
@@ -58,5 +78,10 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
                 .withUrl("https://api.watchrabbit.com/")
                 .build()
         );
+
+        ArgumentCaptor<CrawlResult> argumentCaptor = ArgumentCaptor.forClass(CrawlResult.class);
+        verify(managerServiceFacade).consumeResult(argumentCaptor.capture());
+
+        assertThat(argumentCaptor.getValue().getLinks()).isNotEmpty();
     }
 }
