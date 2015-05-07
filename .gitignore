@@ -13,3 +13,5 @@ hs_err_pid*
 /nb-configuration.xml
 /spider/nb-configuration.xml
 /rabbit-crawler-driver/target/
+/rabbit-crawler-driver/nb-configuration.xml
+/crawler-driver/target/

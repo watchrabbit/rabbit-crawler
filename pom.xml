@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
     <name>Watchrabbit - Crawler</name>
     <modules>
-        <module>rabbit-crawler-driver</module>
+        <module>crawler-driver</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
