@@ -15,7 +15,7 @@
  */
 package com.watchrabbit.crawler.auth.repository;
 
-import com.watchrabbit.crawler.auth.model.AuthData;
+import com.watchrabbit.crawler.api.AuthData;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,7 +33,7 @@ public class InMemoryAuthDataRepository implements AuthDataRepository {
     }
 
     @Override
-    public void addNewAuthData(AuthData authData) {
+    public void save(AuthData authData) {
         this.authData.put(authData.getDomain(), authData);
     }
 

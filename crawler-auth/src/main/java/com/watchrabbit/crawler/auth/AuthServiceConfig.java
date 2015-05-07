@@ -37,4 +37,5 @@ public class AuthServiceConfig {
     AuthDataRepository getAuthDataRepository() {
         return new InMemoryAuthDataRepository();
     }
+
 }

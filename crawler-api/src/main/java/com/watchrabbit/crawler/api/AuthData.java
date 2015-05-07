@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.auth.model;
+package com.watchrabbit.crawler.api;
 
 /**
  *

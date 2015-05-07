@@ -15,8 +15,7 @@
  */
 package com.watchrabbit.crawler.auth.service;
 
-import com.watchrabbit.crawler.auth.exception.LoginFormLocalizationException;
-import com.watchrabbit.crawler.auth.model.AuthData;
+import com.watchrabbit.crawler.api.AuthData;
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
 import com.watchrabbit.crawler.driver.util.WaitFor;
@@ -50,7 +49,12 @@ public class AuthServiceImpl implements AuthService {
     RemoteWebDriverFactory remoteWebDriverFactory;
 
     @Override
-    public Collection<Cookie> getSession(String domain) throws LoginFormLocalizationException {
+    public void addNewAuthData(AuthData authData) {
+        authDataDao.save(authData);
+    }
+
+    @Override
+    public Collection<Cookie> getSession(String domain) {
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
         try {
             AuthData authData = authDataDao.findByDomain(domain);
@@ -62,6 +66,10 @@ public class AuthServiceImpl implements AuthService {
             WaitFor.load(driver);
 
             WebElement loginForm = locateLoginForm(driver);
+            if (loginForm == null) {
+                LOGGER.error("Cannot locate any form that matches criteria on {}", authData.getAuthEndpointUrl());
+                return emptyList();
+            }
             WebElement password = findPasswordInput(loginForm);
             WebElement login = findLoginInput(loginForm);
 
@@ -76,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private WebElement locateLoginForm(RemoteWebDriver driver) throws LoginFormLocalizationException {
+    private WebElement locateLoginForm(RemoteWebDriver driver) {
         for (WebElement form : driver.findElements(By.xpath("//form"))) {
             List<WebElement> inputs = form.findElements(By.xpath("//input")).stream()
                     .filter(input -> isLoginInput(input) || isPasswordInput(input))
@@ -85,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
                 return form;
             }
         }
-        throw new LoginFormLocalizationException("Cannot locate any form that matches criteria");
+        return null;
     }
 
     private boolean isLoginInput(WebElement input) {

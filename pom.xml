@@ -9,6 +9,7 @@
     <modules>
         <module>crawler-driver</module>
         <module>crawler-auth</module>
+        <module>crawler-api</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -108,6 +109,11 @@
             <dependency>
                 <groupId>com.watchrabbit</groupId>
                 <artifactId>crawler-driver</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.watchrabbit</groupId>
+                <artifactId>crawler-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -15,7 +15,7 @@
  */
 package com.watchrabbit.crawler.auth.repository;
 
-import com.watchrabbit.crawler.auth.model.AuthData;
+import com.watchrabbit.crawler.api.AuthData;
 
 /**
  *
@@ -25,5 +25,5 @@ public interface AuthDataRepository {
 
     AuthData findByDomain(String domain);
 
-    void addNewAuthData(AuthData authData);
+    void save(AuthData authData);
 }

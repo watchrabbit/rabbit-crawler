@@ -24,6 +24,10 @@
             <groupId>com.watchrabbit</groupId>
             <artifactId>crawler-driver</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.watchrabbit</groupId>
+            <artifactId>crawler-api</artifactId>
+        </dependency>
         
         <!-- Third party libraries -->
         <dependency>

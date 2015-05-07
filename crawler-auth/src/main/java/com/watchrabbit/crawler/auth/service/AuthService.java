@@ -15,7 +15,7 @@
  */
 package com.watchrabbit.crawler.auth.service;
 
-import com.watchrabbit.crawler.auth.exception.LoginFormLocalizationException;
+import com.watchrabbit.crawler.api.AuthData;
 import java.util.Collection;
 import org.openqa.selenium.Cookie;
 
@@ -25,5 +25,7 @@ import org.openqa.selenium.Cookie;
  */
 public interface AuthService {
 
-    Collection<Cookie> getSession(String domain) throws LoginFormLocalizationException;
+    Collection<Cookie> getSession(String domain);
+
+    void addNewAuthData(AuthData authData);
 }
