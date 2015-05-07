@@ -13,4 +13,48 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <name>Watchrabbit - Crawler - Executor</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>com.watchrabbit</groupId>
+            <artifactId>crawler-driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.watchrabbit</groupId>
+            <artifactId>crawler-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.watchrabbit</groupId>
+            <artifactId>crawler-auth</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Third party libraries -->
+        <dependency>
+            <groupId>com.watchrabbit</groupId>
+            <artifactId>rabbit-commons</artifactId>
+        </dependency>
+
+        <!-- Test libraries -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

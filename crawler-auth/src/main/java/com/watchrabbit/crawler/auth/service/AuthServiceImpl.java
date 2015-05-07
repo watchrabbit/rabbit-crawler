@@ -15,6 +15,7 @@
  */
 package com.watchrabbit.crawler.auth.service;
 
+import com.watchrabbit.commons.marker.Todo;
 import com.watchrabbit.crawler.api.AuthData;
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
@@ -54,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Todo("Store session for reuse")
     public Collection<Cookie> getSession(String domain) {
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
         try {
