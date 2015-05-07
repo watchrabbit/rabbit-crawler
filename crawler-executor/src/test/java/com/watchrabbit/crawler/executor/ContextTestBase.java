@@ -16,9 +16,12 @@ package com.watchrabbit.crawler.executor;
  * limitations under the License.
  */
 import com.watchrabbit.crawler.auth.EnableAuthService;
+import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import org.junit.runner.RunWith;
+import static org.mockito.Mockito.mock;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -34,4 +37,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringApplicationConfiguration(classes = {ContextTestBase.class})
 public class ContextTestBase {
 
+    @Bean
+    public ManagerServiceFacade managerServiceFacade() {
+        return mock(ManagerServiceFacade.class);
+    }
 }

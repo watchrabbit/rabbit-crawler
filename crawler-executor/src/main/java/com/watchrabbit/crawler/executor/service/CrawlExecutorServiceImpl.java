@@ -15,16 +15,19 @@
  */
 package com.watchrabbit.crawler.executor.service;
 
+import com.watchrabbit.commons.clock.Stopwatch;
 import com.watchrabbit.commons.marker.Feature;
-import com.watchrabbit.commons.marker.Todo;
 import com.watchrabbit.crawler.api.CrawlForm;
+import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
 import com.watchrabbit.crawler.driver.util.WaitFor;
 import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
+import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import com.watchrabbit.crawler.executor.listener.CrawlListener;
 import java.util.Collection;
 import static java.util.Collections.emptyList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import static java.util.stream.Collectors.toList;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -38,44 +41,53 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrawlExecutorServiceImpl implements CrawlExecutorService {
-    
+
     @Autowired
     AuthServiceFacade authServiceFacade;
-    
+
     @Autowired
     RemoteWebDriverFactory remoteWebDriverFactory;
-    
+
+    @Autowired
+    ManagerServiceFacade managerServiceFacade;
+
     @Autowired(required = false)
     List<CrawlListener> crawlListeners = emptyList();
-    
+
     @Override
     @Feature("Second load after setting cookies maybe not necessary")
-    @Todo("send links to executor")
     public void processPage(CrawlForm form) {
         Collection<Cookie> session = authServiceFacade.getSession(form.getDomain());
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
         try {
-            enableSession(driver, form.getUrl(), session);
-            
-            collectLinks(driver).forEach(System.out::println);
+            Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form.getUrl(), session));
+
+            List<String> links = collectLinks(driver);
+            managerServiceFacade.consumeResult(new CrawlResult.Builder()
+                    .withDomain(form.getDomain())
+                    .withMiliseconds(stopwatch.getExecutionTime(TimeUnit.MILLISECONDS))
+                    .withUrl(form.getUrl())
+                    .withLinks(links)
+                    .build()
+            );
             crawlListeners.forEach(listener -> listener.accept(driver));
         } finally {
             remoteWebDriverFactory.returnWebDriver(driver);
         }
     }
-    
+
     private void enableSession(RemoteWebDriver driver, String url, Collection<Cookie> session) {
         driver.get(url);
         WaitFor.load(driver);
         if (!session.isEmpty()) {
             driver.manage().deleteAllCookies();
             session.forEach(driver.manage()::addCookie);
-            
+
             driver.get(url);
             WaitFor.load(driver);
         }
     }
-    
+
     private List<String> collectLinks(RemoteWebDriver driver) {
         return driver.findElements(By.xpath("//a")).stream()
                 .map(link -> link.getAttribute("href"))

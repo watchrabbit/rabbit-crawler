@@ -44,7 +44,7 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
     }
 
     @Test
-    public void shouldLogInandCollect() {
+    public void shouldLogInAndCollect() {
         authService.addNewAuthData(new AuthData.Builder()
                 .withDomain("api.watchrabbit.com")
                 .withLogin("mariusz.luciow@gmail.com")
