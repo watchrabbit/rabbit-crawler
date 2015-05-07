@@ -44,9 +44,6 @@ public class WaitFor {
             } catch (TimeoutException ex) {
                 LOGGER.info("Timed out on {}", driver.getCurrentUrl());
             }
-        } else {
-            WebDriverWait wait = new WebDriverWait(driver, 1);
-            wait.until((Predicate<WebDriver>) webDriver -> Boolean.FALSE);
         }
     }
 
