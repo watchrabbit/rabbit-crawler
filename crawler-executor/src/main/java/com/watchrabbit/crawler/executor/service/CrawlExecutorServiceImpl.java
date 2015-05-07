@@ -16,7 +16,6 @@
 package com.watchrabbit.crawler.executor.service;
 
 import com.watchrabbit.commons.clock.Stopwatch;
-import com.watchrabbit.commons.marker.Feature;
 import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
@@ -55,7 +54,6 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
     List<CrawlListener> crawlListeners = emptyList();
 
     @Override
-    @Feature("Second load after setting cookies maybe not necessary")
     public void processPage(CrawlForm form) {
         Collection<Cookie> session = authServiceFacade.getSession(form.getDomain());
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
