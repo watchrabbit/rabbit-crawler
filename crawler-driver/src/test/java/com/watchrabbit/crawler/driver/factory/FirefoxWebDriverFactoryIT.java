@@ -42,8 +42,8 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
 
             assertThat(driver.manage().getCookieNamed("JSESSIONID").getValue()).isEqualTo(driver2.manage().getCookieNamed("JSESSIONID").getValue());
         } finally {
-            driver.quit();
-            driver2.quit();
+            firefoxFactory.returnWebDriver(driver);
+            firefoxFactory.returnWebDriver(driver2);
         }
     }
 

@@ -9,4 +9,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 public interface RemoteWebDriverFactory {
 
     RemoteWebDriver produceDriver();
+
+    void returnWebDriver(RemoteWebDriver driver);
 }
