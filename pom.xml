@@ -8,6 +8,7 @@
     <name>Watchrabbit - Crawler</name>
     <modules>
         <module>crawler-driver</module>
+        <module>crawler-auth</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
