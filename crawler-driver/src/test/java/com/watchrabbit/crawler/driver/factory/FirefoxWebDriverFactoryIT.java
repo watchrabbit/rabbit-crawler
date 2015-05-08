@@ -16,7 +16,7 @@
 package com.watchrabbit.crawler.driver.factory;
 
 import com.watchrabbit.crawler.driver.ContextTestBase;
-import com.watchrabbit.crawler.driver.util.WaitFor;
+import com.watchrabbit.crawler.driver.service.LoaderService;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -32,6 +32,9 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
     @Autowired
     @Qualifier("firefoxWebDriverFactory")
     RemoteWebDriverFactory firefoxFactory;
+
+    @Autowired
+    LoaderService loaderService;
 
     @Test
     public void shouldGetDriver() {
@@ -67,7 +70,7 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
     public void shouldWaitForLoad() {
         RemoteWebDriver driver = firefoxFactory.produceDriver();
         driver.get("https://scalingapp.com");
-        WaitFor.load(driver);
+        loaderService.waitFor(driver);
 
         firefoxFactory.returnWebDriver(driver);
     }
@@ -77,7 +80,7 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
         RemoteWebDriver driver = firefoxFactory.produceDriver();
         driver.get("https://api.watchrabbit.com/signin");
 
-        WaitFor.load(driver);
+        loaderService.waitFor(driver);
 
         firefoxFactory.returnWebDriver(driver);
     }

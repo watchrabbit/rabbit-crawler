@@ -17,42 +17,35 @@ package com.watchrabbit.crawler.driver.util;
 
 import com.google.common.base.Predicate;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Mariusz
  */
-public class WaitFor {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WaitFor.class);
+@Service
+public class AngularLoadingStrategy implements LoadingStrategy {
 
     private static final String ANGULAR_GUARD = "return (window.angular != null) && "
             + "(window.angular.element(document.body).injector() != null) && "
             + "(window.angular.element(document.body).injector().get('$http').pendingRequests.length === 0)";
 
-    public static void load(RemoteWebDriver driver) {
-        if (isAngular(driver)) {
-            WebDriverWait wait = new WebDriverWait(driver, 5);
-            try {
-                wait.until(angularHasFinishedProcessing());
-            } catch (TimeoutException ex) {
-                LOGGER.info("Timed out on {}", driver.getCurrentUrl());
-            }
-        }
-    }
-
-    private static boolean isAngular(RemoteWebDriver driver) {
+    @Override
+    public boolean shouldWait(RemoteWebDriver driver) {
         return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null)").toString());
     }
 
-    private static Predicate<WebDriver> angularHasFinishedProcessing() {
+    @Override
+    public int getWaitTime() {
+        return 5;
+    }
+
+    @Override
+    public Predicate<WebDriver> hasFinishedProcessing() {
         return driver
                 -> Boolean.valueOf(((JavascriptExecutor) driver).executeScript(ANGULAR_GUARD).toString());
     }
+
 }

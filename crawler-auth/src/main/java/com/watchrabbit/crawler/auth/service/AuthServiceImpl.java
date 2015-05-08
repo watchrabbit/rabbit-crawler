@@ -19,7 +19,7 @@ import com.watchrabbit.commons.marker.Todo;
 import com.watchrabbit.crawler.api.AuthData;
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
-import com.watchrabbit.crawler.driver.util.WaitFor;
+import com.watchrabbit.crawler.driver.service.LoaderService;
 import java.util.Collection;
 import static java.util.Collections.emptyList;
 import java.util.List;
@@ -49,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     RemoteWebDriverFactory remoteWebDriverFactory;
 
+    @Autowired
+    LoaderService loaderService;
+
     @Override
     public void addNewAuthData(AuthData authData) {
         authDataDao.save(authData);
@@ -65,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
                 return emptyList();
             }
             driver.get(authData.getAuthEndpointUrl());
-            WaitFor.load(driver);
+            loaderService.waitFor(driver);
 
             WebElement loginForm = locateLoginForm(driver);
             if (loginForm == null) {
@@ -78,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
             login.sendKeys(authData.getLogin());
             password.sendKeys(authData.getPassword());
             loginForm.submit();
-            WaitFor.load(driver);
+            loaderService.waitFor(driver);
 
             return driver.manage().getCookies();
         } finally {

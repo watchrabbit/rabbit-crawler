@@ -19,7 +19,7 @@ import com.watchrabbit.commons.clock.Stopwatch;
 import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
-import com.watchrabbit.crawler.driver.util.WaitFor;
+import com.watchrabbit.crawler.driver.service.LoaderService;
 import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
 import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import com.watchrabbit.crawler.executor.listener.CrawlListener;
@@ -50,6 +50,9 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
     @Autowired
     ManagerServiceFacade managerServiceFacade;
 
+    @Autowired
+    LoaderService loaderService;
+
     @Autowired(required = false)
     List<CrawlListener> crawlListeners = emptyList();
 
@@ -76,13 +79,13 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
 
     private void enableSession(RemoteWebDriver driver, String url, Collection<Cookie> session) {
         driver.get(url);
-        WaitFor.load(driver);
+        loaderService.waitFor(driver);
         if (!session.isEmpty()) {
             driver.manage().deleteAllCookies();
             session.forEach(driver.manage()::addCookie);
 
             driver.get(url);
-            WaitFor.load(driver);
+            loaderService.waitFor(driver);
         }
     }
 
