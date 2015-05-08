@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import static org.mockito.Mockito.mock;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,6 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Configuration
 @EnableAuthService
+@WebIntegrationTest
 @EnableExecutorService
 @SpringBootApplication
 @SpringApplicationConfiguration(classes = {ContextTestBase.class})
