@@ -15,8 +15,8 @@
  */
 package com.watchrabbit.crawler.auth.service;
 
-import com.watchrabbit.crawler.auth.ContextTestBase;
 import com.watchrabbit.crawler.api.AuthData;
+import com.watchrabbit.crawler.auth.ContextTestBase;
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
 import org.junit.Test;
@@ -44,8 +44,11 @@ public class AuthServiceIT extends ContextTestBase {
                 .withLogin("mariusz.luciow@gmail.com")
                 .withPassword("wkswks12")
                 .withAuthEndpointUrl("https://api.watchrabbit.com/signin")
+                .withSessionDuration(60)
                 .build()
         );
+
+        authService.getSession("api.watchrabbit.com");
 
         authService.getSession("api.watchrabbit.com");
     }

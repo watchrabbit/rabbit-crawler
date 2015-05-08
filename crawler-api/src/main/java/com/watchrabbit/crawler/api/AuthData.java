@@ -29,6 +29,16 @@ public class AuthData {
 
     private String domain;
 
+    private int sessionDuration;
+
+    public int getSessionDuration() {
+        return sessionDuration;
+    }
+
+    public void setSessionDuration(int sessionDuration) {
+        this.sessionDuration = sessionDuration;
+    }
+
     public String getAuthEndpointUrl() {
         return authEndpointUrl;
     }
@@ -86,6 +96,11 @@ public class AuthData {
 
         public Builder withDomain(final String domain) {
             this.item.domain = domain;
+            return this;
+        }
+
+        public Builder withSessionDuration(final int sessionDuration) {
+            this.item.sessionDuration = sessionDuration;
             return this;
         }
 

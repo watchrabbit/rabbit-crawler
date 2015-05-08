@@ -15,11 +15,14 @@
  */
 package com.watchrabbit.crawler.auth.service;
 
-import com.watchrabbit.commons.marker.Todo;
+import com.watchrabbit.commons.clock.Clock;
+import com.watchrabbit.commons.clock.SystemClock;
 import com.watchrabbit.crawler.api.AuthData;
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
+import com.watchrabbit.crawler.auth.repository.SessionRepository;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
 import com.watchrabbit.crawler.driver.service.LoaderService;
+import java.util.Calendar;
 import java.util.Collection;
 import static java.util.Collections.emptyList;
 import java.util.List;
@@ -43,11 +46,16 @@ public class AuthServiceImpl implements AuthService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
+    Clock clock = SystemClock.getInstance();
+
     @Autowired
     AuthDataRepository authDataDao;
 
     @Autowired
     RemoteWebDriverFactory remoteWebDriverFactory;
+
+    @Autowired
+    SessionRepository sessionRepository;
 
     @Autowired
     LoaderService loaderService;
@@ -58,8 +66,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Todo("Store session for reuse")
     public Collection<Cookie> getSession(String domain) {
+        Collection<Cookie> cookies = sessionRepository.findByDomain(domain);
+        if (cookies != null) {
+            return cookies;
+        }
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
         try {
             AuthData authData = authDataDao.findByDomain(domain);
@@ -83,7 +94,11 @@ public class AuthServiceImpl implements AuthService {
             loginForm.submit();
             loaderService.waitFor(driver);
 
-            return driver.manage().getCookies();
+            cookies = driver.manage().getCookies();
+            Calendar now = clock.getCalendar();
+            now.add(Calendar.SECOND, authData.getSessionDuration());
+            sessionRepository.save(domain, cookies, now.getTime());
+            return cookies;
         } finally {
             remoteWebDriverFactory.returnWebDriver(driver);
         }

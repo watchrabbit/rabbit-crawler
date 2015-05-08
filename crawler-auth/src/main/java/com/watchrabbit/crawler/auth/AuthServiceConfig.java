@@ -17,6 +17,8 @@ package com.watchrabbit.crawler.auth;
 
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
 import com.watchrabbit.crawler.auth.repository.InMemoryAuthDataRepository;
+import com.watchrabbit.crawler.auth.repository.InMemorySessionRepository;
+import com.watchrabbit.crawler.auth.repository.SessionRepository;
 import com.watchrabbit.crawler.driver.EnableWebDrivers;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,12 @@ public class AuthServiceConfig {
     @ConditionalOnMissingBean
     AuthDataRepository getAuthDataRepository() {
         return new InMemoryAuthDataRepository();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    SessionRepository getSessionRepository() {
+        return new InMemorySessionRepository();
     }
 
 }
