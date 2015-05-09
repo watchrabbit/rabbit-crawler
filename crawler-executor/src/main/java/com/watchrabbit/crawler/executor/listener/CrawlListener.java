@@ -23,5 +23,5 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  */
 public interface CrawlListener {
 
-    public int accept(RemoteWebDriver page);
+    public double accept(RemoteWebDriver page);
 }

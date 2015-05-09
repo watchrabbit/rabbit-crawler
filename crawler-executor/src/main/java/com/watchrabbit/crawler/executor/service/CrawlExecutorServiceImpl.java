@@ -63,7 +63,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
             Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form.getUrl(), session));
 
             List<String> links = collectLinks(driver);
-            int importanceFactor = crawlListener.accept(driver);
+            double importanceFactor = crawlListener.accept(driver);
             managerServiceFacade.consumeResult(new CrawlResult.Builder()
                     .withDomain(form.getDomain())
                     .withMiliseconds(stopwatch.getExecutionTime(TimeUnit.MILLISECONDS))

@@ -67,6 +67,7 @@ public class OPICImportancePolicy implements ImportancePolicy {
         double change = cash / links.size();
         links.forEach(url -> distribute(url, change));
         addressOPIC.resetCash(opicHistoricalResults);
+        addressOPIC.addCash(crawlResult.getImportanceFactor());
         addressOPICRepository.save(addressOPIC);
     }
 

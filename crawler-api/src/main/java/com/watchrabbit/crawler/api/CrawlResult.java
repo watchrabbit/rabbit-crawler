@@ -33,13 +33,13 @@ public class CrawlResult {
 
     private String id;
 
-    private int importanceFactor;
+    private double importanceFactor;
 
-    public int getImportanceFactor() {
+    public double getImportanceFactor() {
         return importanceFactor;
     }
 
-    public void setImportanceFactor(int importanceFactor) {
+    public void setImportanceFactor(double importanceFactor) {
         this.importanceFactor = importanceFactor;
     }
 
@@ -116,7 +116,7 @@ public class CrawlResult {
             return this;
         }
 
-        public Builder withImportanceFactor(final int importanceFactor) {
+        public Builder withImportanceFactor(final double importanceFactor) {
             this.item.importanceFactor = importanceFactor;
             return this;
         }
