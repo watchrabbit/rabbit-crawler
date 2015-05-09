@@ -13,6 +13,7 @@
         <module>crawler-manager</module>
         <module>crawler-executor</module>
         <module>crawler-batch</module>
+        <module>crawler-example</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

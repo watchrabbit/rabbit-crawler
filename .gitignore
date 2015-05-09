@@ -28,3 +28,4 @@ hs_err_pid*
 /crawler-manager/target/
 /crawler-batch/nb-configuration.xml
 /crawler-batch/target/
+/crawler-example/target/

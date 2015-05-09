@@ -26,6 +26,7 @@ import com.watchrabbit.crawler.manager.policy.EtiquettePolicy;
 import com.watchrabbit.crawler.manager.policy.ImportancePolicy;
 import com.watchrabbit.crawler.manager.policy.RevisitPolicy;
 import com.watchrabbit.crawler.manager.repository.AddressRepository;
+import com.watchrabbit.crawler.manager.util.InternetAddress;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -69,10 +70,20 @@ public class ManagerServiceImpl implements ManagerService {
     EtiquettePolicy etiquettePolicy;
 
     @Override
+    public void addPage(String url) {
+        Address address = new Address.Builder()
+                .withUrl(url)
+                .withNextExecutionDate(new Date())
+                .withDomainName(InternetAddress.getDomainName(url))
+                .build();
+        addressRepository.save(address);
+    }
+
+    @Override
     public void orderExecution(List<String> ids) {
         ids.forEach(this::orderExecution);
     }
-
+    
     @Override
     public void orderExecution(String id) {
         Address address = addressRepository.find(id);
@@ -97,7 +108,7 @@ public class ManagerServiceImpl implements ManagerService {
         leaseService.removeLease(result.getUrl());
         addressRepository.save(address);
     }
-
+    
     @Todo("improve this, better limit usage")
     @Override
     public List<String> findIdsForExecution(int limit) {

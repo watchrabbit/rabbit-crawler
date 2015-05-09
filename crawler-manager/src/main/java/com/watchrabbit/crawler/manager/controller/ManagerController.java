@@ -17,6 +17,7 @@ package com.watchrabbit.crawler.manager.controller;
 
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.api.ExecutionForm;
+import com.watchrabbit.crawler.api.PageForm;
 import com.watchrabbit.crawler.manager.service.ManagerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,10 @@ public class ManagerController {
     @RequestMapping(value = "/result", method = RequestMethod.POST)
     public void onResult(@RequestBody CrawlResult crawlResult) {
         managerService.onCrawlResult(crawlResult);
+    }
+
+    @RequestMapping(value = "/page", method = RequestMethod.POST)
+    public void addPage(@RequestBody PageForm form) {
+        managerService.addPage(form.getUrl());
     }
 }

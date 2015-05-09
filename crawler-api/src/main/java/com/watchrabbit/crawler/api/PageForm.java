@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.manager.service;
-
-import com.watchrabbit.crawler.api.CrawlResult;
-import java.util.List;
+package com.watchrabbit.crawler.api;
 
 /**
  *
  * @author Mariusz
  */
-public interface ManagerService {
+public class PageForm {
 
-    void orderExecution(String id);
+    private String url;
 
-    void orderExecution(List<String> id);
+    public String getUrl() {
+        return url;
+    }
 
-    List<String> findIdsForExecution(int limit);
-
-    void onCrawlResult(CrawlResult result);
-
-    void addPage(String url);
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
 }
