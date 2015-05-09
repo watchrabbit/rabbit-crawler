@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
+package com.watchrabbit.crawler.manager.util;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import com.watchrabbit.commons.exception.SystemException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public class InternetAddress {
 
-    public int accept(RemoteWebDriver page);
+    public static String getDomainName(String url) {
+        try {
+            URI uri = new URI(url);
+            String domain = uri.getHost();
+            return domain.startsWith("www.") ? domain.substring(4) : domain;
+        } catch (URISyntaxException ex) {
+            throw new SystemException("Should be parseable :" + url, ex);
+        }
+    }
 }

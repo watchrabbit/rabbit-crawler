@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
-
-import org.openqa.selenium.remote.RemoteWebDriver;
+package com.watchrabbit.crawler.manager.service;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public interface LeaseService {
 
-    public int accept(RemoteWebDriver page);
+    void createLease(String key, int second);
+
+    boolean hasLease(String key);
+
+    void removeLease(String key);
 }

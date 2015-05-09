@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
+package com.watchrabbit.crawler.manager.policy;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import com.watchrabbit.crawler.api.CrawlResult;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public interface ImportancePolicy {
 
-    public int accept(RemoteWebDriver page);
+    void processCrawlResult(CrawlResult crawlResult);
+
+    double getImportance(String id);
 }

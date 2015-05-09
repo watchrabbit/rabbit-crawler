@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.api;
+package com.watchrabbit.crawler.manager.model;
+
+import java.util.Date;
 
 /**
  *
  * @author Mariusz
  */
-public class CrawlForm {
+public class Address {
 
-    private String domain;
+    private String id;
 
     private String url;
 
-    private String id;
+    private String domainName;
+
+    private Date nextExecutionDate;
 
     public String getId() {
         return id;
@@ -33,14 +37,6 @@ public class CrawlForm {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
     }
 
     public String getUrl() {
@@ -51,16 +47,32 @@ public class CrawlForm {
         this.url = url;
     }
 
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
+    public Date getNextExecutionDate() {
+        return nextExecutionDate;
+    }
+
+    public void setNextExecutionDate(Date nextExecutionDate) {
+        this.nextExecutionDate = nextExecutionDate;
+    }
+
     public static class Builder {
 
-        private final CrawlForm item;
+        private final Address item;
 
         public Builder() {
-            this.item = new CrawlForm();
+            this.item = new Address();
         }
 
-        public Builder withDomain(final String domain) {
-            this.item.domain = domain;
+        public Builder withId(final String id) {
+            this.item.id = id;
             return this;
         }
 
@@ -69,12 +81,17 @@ public class CrawlForm {
             return this;
         }
 
-        public Builder withId(final String id) {
-            this.item.id = id;
+        public Builder withDomainName(final String domainName) {
+            this.item.domainName = domainName;
             return this;
         }
 
-        public CrawlForm build() {
+        public Builder withNextExecutionDate(final Date nextExecutionDate) {
+            this.item.nextExecutionDate = nextExecutionDate;
+            return this;
+        }
+
+        public Address build() {
             return this.item;
         }
     }

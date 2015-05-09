@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
-
-import org.openqa.selenium.remote.RemoteWebDriver;
+package com.watchrabbit.crawler.manager.policy;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public interface EtiquettePolicy {
 
-    public int accept(RemoteWebDriver page);
+    boolean canProcessDomain(String domain);
+
+    void onDomainProcessing(String domain);
+
 }

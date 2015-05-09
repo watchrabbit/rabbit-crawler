@@ -24,7 +24,6 @@ import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
 import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import com.watchrabbit.crawler.executor.listener.CrawlListener;
 import java.util.Collection;
-import static java.util.Collections.emptyList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import static java.util.stream.Collectors.toList;
@@ -54,7 +53,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
     LoaderService loaderService;
 
     @Autowired(required = false)
-    List<CrawlListener> crawlListeners = emptyList();
+    CrawlListener crawlListener = driver -> 0;
 
     @Override
     public void processPage(CrawlForm form) {
@@ -64,14 +63,16 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
             Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form.getUrl(), session));
 
             List<String> links = collectLinks(driver);
+            int importanceFactor = crawlListener.accept(driver);
             managerServiceFacade.consumeResult(new CrawlResult.Builder()
                     .withDomain(form.getDomain())
                     .withMiliseconds(stopwatch.getExecutionTime(TimeUnit.MILLISECONDS))
                     .withUrl(form.getUrl())
                     .withLinks(links)
+                    .withId(form.getId())
+                    .withImportanceFactor(importanceFactor)
                     .build()
             );
-            crawlListeners.forEach(listener -> listener.accept(driver));
         } finally {
             remoteWebDriverFactory.returnWebDriver(driver);
         }

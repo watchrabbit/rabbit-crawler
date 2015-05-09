@@ -25,3 +25,4 @@ hs_err_pid*
 /crawler-manager/nb-configuration.xml
 /crawler-executor/nb-configuration.xml
 /crawler-executor/target/
+/crawler-manager/target/

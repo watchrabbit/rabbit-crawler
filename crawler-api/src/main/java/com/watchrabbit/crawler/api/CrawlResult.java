@@ -31,6 +31,18 @@ public class CrawlResult {
 
     private String url;
 
+    private String id;
+
+    private int importanceFactor;
+
+    public int getImportanceFactor() {
+        return importanceFactor;
+    }
+
+    public void setImportanceFactor(int importanceFactor) {
+        this.importanceFactor = importanceFactor;
+    }
+
     public List<String> getLinks() {
         return links;
     }
@@ -63,6 +75,14 @@ public class CrawlResult {
         this.url = url;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public static class Builder {
 
         private final CrawlResult item;
@@ -88,6 +108,16 @@ public class CrawlResult {
 
         public Builder withUrl(final String url) {
             this.item.url = url;
+            return this;
+        }
+
+        public Builder withId(final String id) {
+            this.item.id = id;
+            return this;
+        }
+
+        public Builder withImportanceFactor(final int importanceFactor) {
+            this.item.importanceFactor = importanceFactor;
             return this;
         }
 

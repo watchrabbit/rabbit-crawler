@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
+package com.watchrabbit.crawler.manager.repository;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import com.watchrabbit.crawler.manager.model.AddressOPIC;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public interface AddressOPICRepository {
 
-    public int accept(RemoteWebDriver page);
+    AddressOPIC find(String id);
+
+    void save(AddressOPIC addressOPIC);
 }

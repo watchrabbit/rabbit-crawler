@@ -123,6 +123,11 @@
                 <artifactId>crawler-auth</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.watchrabbit</groupId>
+                <artifactId>crawler-executor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     

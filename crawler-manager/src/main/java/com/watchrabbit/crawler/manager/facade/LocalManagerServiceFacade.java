@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
+package com.watchrabbit.crawler.manager.facade;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import com.watchrabbit.crawler.api.CrawlResult;
+import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
+import com.watchrabbit.crawler.manager.service.ManagerService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public class LocalManagerServiceFacade implements ManagerServiceFacade {
 
-    public int accept(RemoteWebDriver page);
+    @Autowired
+    ManagerService managerService;
+
+    @Override
+    public void consumeResult(CrawlResult result) {
+        managerService.onCrawlResult(result);
+    }
+
 }

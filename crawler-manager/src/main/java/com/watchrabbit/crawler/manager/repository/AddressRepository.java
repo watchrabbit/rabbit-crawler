@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
+package com.watchrabbit.crawler.manager.repository;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import com.watchrabbit.crawler.manager.model.Address;
+import java.util.List;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public interface AddressRepository {
 
-    public int accept(RemoteWebDriver page);
+    Address find(String id);
+
+    Address findByUrl(String url);
+
+    void save(Address address);
+
+    List<Address> findOrderByNextExecutionDate(int limit);
+
 }

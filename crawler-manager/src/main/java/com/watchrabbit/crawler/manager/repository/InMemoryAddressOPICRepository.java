@@ -13,15 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.executor.listener;
+package com.watchrabbit.crawler.manager.repository;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import com.watchrabbit.crawler.manager.model.AddressOPIC;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author Mariusz
  */
-public interface CrawlListener {
+public class InMemoryAddressOPICRepository implements AddressOPICRepository {
 
-    public int accept(RemoteWebDriver page);
+    private final Map<String, AddressOPIC> addressesById = new ConcurrentHashMap<>();
+
+    @Override
+    public AddressOPIC find(String id) {
+        return addressesById.get(id);
+    }
+
+    @Override
+    public void save(AddressOPIC addressOPIC) {
+        addressesById.put(addressOPIC.getId(), addressOPIC);
+    }
+
 }
