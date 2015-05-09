@@ -41,31 +41,36 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ManagerServiceImpl implements ManagerService {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(ManagerServiceImpl.class);
-
+    
     Clock clock = SystemClock.getInstance();
-
+    
     @Value("${crawler.manager.urlProcessingTimeout:3600}")
     int urlProcessingTimeout;
-
+    
     @Autowired
     ExecutorServiceFacade executorServiceFacade;
-
+    
     @Autowired
     AddressRepository addressRepository;
-
+    
     @Autowired
     ImportancePolicy importancePolicy;
-
+    
     @Autowired
     RevisitPolicy revisitPolicy;
-
+    
     @Autowired
     LeaseService leaseService;
-
+    
     @Autowired
     EtiquettePolicy etiquettePolicy;
+
+    @Override
+    public void orderExecution(List<String> ids) {
+        ids.forEach(this::orderExecution);
+    }
 
     @Override
     public void orderExecution(String id) {
@@ -80,7 +85,7 @@ public class ManagerServiceImpl implements ManagerService {
                 .build()
         );
     }
-
+    
     @Override
     public void onCrawlResult(CrawlResult result) {
         importancePolicy.processCrawlResult(result);
@@ -91,7 +96,7 @@ public class ManagerServiceImpl implements ManagerService {
         leaseService.removeLease(result.getUrl());
         addressRepository.save(address);
     }
-
+    
     @Override
     public List<String> findIdsForExecution(int limit) {
         return addressRepository.findOrderByNextExecutionDate(limit).stream()
@@ -103,22 +108,22 @@ public class ManagerServiceImpl implements ManagerService {
                 .map(adress -> adress.getId())
                 .collect(toList());
     }
-
+    
     private class AddressWrapper {
-
+        
         Address address;
-
+        
         public AddressWrapper(Address address) {
             this.address = address;
         }
-
+        
         @Override
         public int hashCode() {
             int hash = 7;
             hash = 17 * hash + Objects.hashCode(this.address.getDomainName());
             return hash;
         }
-
+        
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -133,7 +138,7 @@ public class ManagerServiceImpl implements ManagerService {
             }
             return true;
         }
-
+        
     }
-
+    
 }

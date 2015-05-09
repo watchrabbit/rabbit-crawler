@@ -13,23 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.manager.service;
+package com.watchrabbit.crawler.api;
 
-import com.watchrabbit.crawler.api.CrawlResult;
 import java.util.List;
 
 /**
  *
  * @author Mariusz
  */
-public interface ManagerService {
+public class ExecutionForm {
 
-    void orderExecution(String id);
+    private List<String> ids;
 
-    void orderExecution(List<String> id);
+    public List<String> getIds() {
+        return ids;
+    }
 
-    List<String> findIdsForExecution(int limit);
+    public void setIds(List<String> ids) {
+        this.ids = ids;
+    }
 
-    void onCrawlResult(CrawlResult result);
+    public static class Builder {
+
+        private final ExecutionForm item;
+
+        public Builder() {
+            this.item = new ExecutionForm();
+        }
+
+        public Builder withIds(final List<String> ids) {
+            this.item.ids = ids;
+            return this;
+        }
+
+        public ExecutionForm build() {
+            return this.item;
+        }
+    }
 
 }
