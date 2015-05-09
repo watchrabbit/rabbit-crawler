@@ -18,6 +18,7 @@ package com.watchrabbit.crawler.manager.facade;
 import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.executor.service.CrawlExecutorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  *
@@ -28,6 +29,7 @@ public class LocalExecutorServiceFacade implements ExecutorServiceFacade {
     @Autowired
     CrawlExecutorService crawlExecutorService;
 
+    @Async
     @Override
     public void processPage(CrawlForm form) {
         crawlExecutorService.processPage(form);

@@ -37,12 +37,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  *
  * @author Mariusz
  */
 @Configuration
+@EnableAsync
 @ComponentScan
 public class ManagerServiceConfig {
 
