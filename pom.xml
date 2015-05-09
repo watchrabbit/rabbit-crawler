@@ -12,6 +12,7 @@
         <module>crawler-api</module>
         <module>crawler-manager</module>
         <module>crawler-executor</module>
+        <module>crawler-batch</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -126,6 +127,16 @@
             <dependency>
                 <groupId>com.watchrabbit</groupId>
                 <artifactId>crawler-executor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.watchrabbit</groupId>
+                <artifactId>crawler-batch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.watchrabbit</groupId>
+                <artifactId>crawler-manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -26,3 +26,5 @@ hs_err_pid*
 /crawler-executor/nb-configuration.xml
 /crawler-executor/target/
 /crawler-manager/target/
+/crawler-batch/nb-configuration.xml
+/crawler-batch/target/
