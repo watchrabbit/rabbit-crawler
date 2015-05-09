@@ -87,7 +87,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public void orderExecution(String id) {
         Address address = addressRepository.find(id);
-        LOGGER.debug("Pushing {} to execution", address.getUrl());
+        LOGGER.info("Pushing {} to execution", address.getUrl());
         etiquettePolicy.onDomainProcessing(address.getDomainName());
         leaseService.createLease(address.getUrl(), urlProcessingTimeout);
         executorServiceFacade.processPage(new CrawlForm.Builder()

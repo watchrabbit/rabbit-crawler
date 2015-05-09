@@ -15,7 +15,6 @@
  */
 package com.watchrabbit.crawler.batch.facade;
 
-import com.watchrabbit.crawler.api.ExecutionForm;
 import java.util.List;
 
 /**
@@ -26,5 +25,7 @@ public interface DispatcherServiceFacade {
 
     List<String> getQueue(int limit);
 
-    void dispatch(ExecutionForm form);
+    void dispatch(List<String> ids);
+
+    int getInstanceCount();
 }

@@ -16,7 +16,6 @@
 package com.watchrabbit.crawler.manager.controller;
 
 import com.watchrabbit.crawler.api.CrawlResult;
-import com.watchrabbit.crawler.api.ExecutionForm;
 import com.watchrabbit.crawler.api.PageForm;
 import com.watchrabbit.crawler.manager.service.ManagerService;
 import java.util.List;
@@ -43,8 +42,8 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/dispatch", method = RequestMethod.POST)
-    public void dispatch(@RequestBody ExecutionForm form) {
-        managerService.orderExecution(form.getIds());
+    public void dispatch(@RequestBody List<String> ids) {
+        managerService.orderExecution(ids);
     }
 
     @RequestMapping(value = "/result", method = RequestMethod.POST)

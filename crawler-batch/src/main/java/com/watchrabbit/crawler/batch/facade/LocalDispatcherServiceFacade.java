@@ -15,7 +15,6 @@
  */
 package com.watchrabbit.crawler.batch.facade;
 
-import com.watchrabbit.crawler.api.ExecutionForm;
 import com.watchrabbit.crawler.manager.service.ManagerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +34,13 @@ public class LocalDispatcherServiceFacade implements DispatcherServiceFacade {
     }
 
     @Override
-    public void dispatch(ExecutionForm form) {
-        managerService.orderExecution(form.getIds());
+    public void dispatch(List<String> ids) {
+        managerService.orderExecution(ids);
+    }
+
+    @Override
+    public int getInstanceCount() {
+        return 1;
     }
 
 }

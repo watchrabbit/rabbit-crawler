@@ -1,1 +1,1 @@
-logging.level.com.watchrabbit.crawler: DEBUG
+logging.level.com.watchrabbit.crawler: INFO

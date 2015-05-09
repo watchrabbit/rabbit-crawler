@@ -92,6 +92,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
 
     private List<String> collectLinks(RemoteWebDriver driver) {
         return driver.findElements(By.xpath("//a")).stream()
+                .filter(element -> element.isDisplayed())
                 .map(link -> link.getAttribute("href"))
                 .filter(link -> link != null)
                 .filter(link -> link.startsWith("http"))

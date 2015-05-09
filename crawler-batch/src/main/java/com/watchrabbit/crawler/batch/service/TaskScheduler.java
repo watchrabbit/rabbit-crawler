@@ -15,16 +15,13 @@
  */
 package com.watchrabbit.crawler.batch.service;
 
-import java.util.Date;
+import com.google.common.collect.Lists;
+import com.watchrabbit.crawler.batch.facade.DispatcherServiceFacade;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionException;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -37,30 +34,24 @@ public class TaskScheduler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskScheduler.class);
 
-    @Autowired
-    JobLauncher jobLauncher;
+    @Value("${crawler.manager.maxQueueProcessingSize:1000}")
+    int maxQueueProcessingSize;
 
     @Autowired
-    Job addressJob;
+    DispatcherServiceFacade dispatcherServiceFacade;
 
     @Scheduled(fixedDelay = 10000)
     public void execute() {
         try {
             LOGGER.info("Starting address job");
 
-            JobParameters params = new JobParametersBuilder()
-                    .addDate("startDate", new Date())
-                    .toJobParameters();
-
-            JobExecution execution = jobLauncher.run(addressJob, params);
-
-            if (execution.getStatus().isUnsuccessful()) {
-                LOGGER.error("Address job failed");
-            } else {
-                LOGGER.info("Address job finished sucessfully");
+            List<String> queue = dispatcherServiceFacade.getQueue(maxQueueProcessingSize);
+            if (queue.size() > 0) {
+                List<List<String>> partition = Lists.partition(queue, queue.size() / dispatcherServiceFacade.getInstanceCount());
+                partition.forEach(dispatcherServiceFacade::dispatch);
             }
-        } catch (JobExecutionException | RuntimeException e) {
-            LOGGER.error("Rule job exception", e);
+        } catch (RuntimeException e) {
+            LOGGER.error("Address job exception", e);
         }
     }
 }
