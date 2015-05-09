@@ -17,10 +17,13 @@ package com.watchrabbit.crawler.manager;
  */
 import com.watchrabbit.crawler.auth.EnableAuthService;
 import com.watchrabbit.crawler.executor.EnableExecutorService;
+import com.watchrabbit.crawler.manager.policy.LinkFilter;
+import static java.util.stream.Collectors.toList;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -36,5 +39,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootApplication
 @SpringApplicationConfiguration(classes = {ContextTestBase.class})
 public class ContextTestBase {
+
+    @Bean
+    public LinkFilter linkFilter() {
+        return (links) -> links.stream().filter(link -> link.contains("scalingapp") || link.contains("watchrabbit")).collect(toList());
+    }
 
 }

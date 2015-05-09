@@ -22,6 +22,7 @@ import com.watchrabbit.crawler.manager.repository.AddressOPICRepository;
 import com.watchrabbit.crawler.manager.repository.AddressRepository;
 import com.watchrabbit.crawler.manager.util.InternetAddress;
 import java.util.Date;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class OPICImportancePolicy implements ImportancePolicy {
     @Autowired
     AddressOPICRepository addressOPICRepository;
 
+    @Autowired(required = false)
+    LinkFilter linkFilter;
+
     @Override
     public void processCrawlResult(CrawlResult crawlResult) {
         AddressOPIC addressOPIC = addressOPICRepository.find(crawlResult.getId());
@@ -56,8 +60,12 @@ public class OPICImportancePolicy implements ImportancePolicy {
                     .build();
         }
         double cash = addressOPIC.getCash();
-        double change = cash / crawlResult.getLinks().size();
-        crawlResult.getLinks().forEach(url -> distribute(url, change));
+        List<String> links = crawlResult.getLinks();
+        if (linkFilter != null) {
+            links = linkFilter.filterLinks(links);
+        }
+        double change = cash / links.size();
+        links.forEach(url -> distribute(url, change));
         addressOPIC.resetCash(opicHistoricalResults);
         addressOPICRepository.save(addressOPIC);
     }

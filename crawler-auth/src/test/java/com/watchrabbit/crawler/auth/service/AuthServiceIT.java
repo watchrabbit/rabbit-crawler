@@ -47,10 +47,10 @@ public class AuthServiceIT extends ContextTestBase {
                 .withSessionDuration(60)
                 .build()
         );
-
         authService.getSession("api.watchrabbit.com");
 
         authService.getSession("api.watchrabbit.com");
+
     }
 
 }

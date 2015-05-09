@@ -16,6 +16,8 @@
 package com.watchrabbit.crawler.manager.service;
 
 import static com.watchrabbit.commons.sleep.Sleep.sleep;
+import com.watchrabbit.crawler.api.AuthData;
+import com.watchrabbit.crawler.auth.service.AuthService;
 import com.watchrabbit.crawler.manager.ContextTestBase;
 import com.watchrabbit.crawler.manager.model.Address;
 import com.watchrabbit.crawler.manager.repository.AddressRepository;
@@ -37,36 +39,47 @@ public class ManagerServiceIT extends ContextTestBase {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    AuthService authService;
+
     @Test
     public void shouldProcessTest() {
+        authService.addNewAuthData(new AuthData.Builder()
+                .withDomain("api.watchrabbit.com")
+                .withLogin("mariusz.luciow@gmail.com")
+                .withPassword("wkswks12")
+                .withAuthEndpointUrl("https://api.watchrabbit.com/signin")
+                .withSessionDuration(60)
+                .build()
+        );
         Address address = new Address.Builder()
                 .withUrl("https://scalingapp.com")
                 .withNextExecutionDate(new Date())
                 .withDomainName(InternetAddress.getDomainName("https://scalingapp.com"))
                 .build();
         addressRepository.save(address);
-        managerService.findIdsForExecution(10).forEach(managerService::orderExecution);
+        managerService.findIdsForExecution(1000).forEach(managerService::orderExecution);
         sleep(10, TimeUnit.SECONDS);
         System.err.println("FIRST BATCH");
         addressRepository.findOrderByNextExecutionDate(1000).stream()
                 .map(queued -> queued.getDomainName() + " " + queued.getUrl() + " " + queued.getNextExecutionDate())
                 .sorted()
                 .forEach(System.out::println);
-        managerService.findIdsForExecution(10).forEach(managerService::orderExecution);
+        managerService.findIdsForExecution(1000).forEach(managerService::orderExecution);
         sleep(10, TimeUnit.SECONDS);
         System.err.println("SECOND BATCH");
         addressRepository.findOrderByNextExecutionDate(1000).stream()
                 .map(queued -> queued.getDomainName() + " " + queued.getUrl() + " " + queued.getNextExecutionDate())
                 .sorted()
                 .forEach(System.out::println);
-        managerService.findIdsForExecution(10).forEach(managerService::orderExecution);
+        managerService.findIdsForExecution(1000).forEach(managerService::orderExecution);
         sleep(10, TimeUnit.SECONDS);
         System.err.println("THIRD BATCH");
         addressRepository.findOrderByNextExecutionDate(1000).stream()
                 .map(queued -> queued.getDomainName() + " " + queued.getUrl() + " " + queued.getNextExecutionDate())
                 .sorted()
                 .forEach(System.out::println);
-        managerService.findIdsForExecution(10).forEach(managerService::orderExecution);
+        managerService.findIdsForExecution(1000).forEach(managerService::orderExecution);
         System.err.println("FOURTH BATCH");
         addressRepository.findOrderByNextExecutionDate(1000).stream()
                 .map(queued -> queued.getDomainName() + " " + queued.getUrl() + " " + queued.getNextExecutionDate())

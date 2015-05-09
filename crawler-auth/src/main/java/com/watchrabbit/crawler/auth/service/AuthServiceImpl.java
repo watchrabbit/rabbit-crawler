@@ -87,7 +87,9 @@ public class AuthServiceImpl implements AuthService {
                 return emptyList();
             }
             WebElement password = findPasswordInput(loginForm);
+            LOGGER.debug("Found password field with name {}", password.getAttribute("name"));
             WebElement login = findLoginInput(loginForm);
+            LOGGER.debug("Found login field with name {}", login.getAttribute("name"));
 
             login.sendKeys(authData.getLogin());
             password.sendKeys(authData.getPassword());
@@ -106,8 +108,10 @@ public class AuthServiceImpl implements AuthService {
 
     private WebElement locateLoginForm(RemoteWebDriver driver) {
         for (WebElement form : driver.findElements(By.xpath("//form"))) {
-            List<WebElement> inputs = form.findElements(By.xpath("//input")).stream()
+            LOGGER.debug("Looking to form with action {}", form.getAttribute("action"));
+            List<WebElement> inputs = form.findElements(By.xpath(".//input")).stream()
                     .filter(input -> isLoginInput(input) || isPasswordInput(input))
+                    .filter(input -> input.isDisplayed())
                     .collect(toList());
             if (inputs.size() == 2) {
                 return form;
@@ -117,6 +121,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private boolean isLoginInput(WebElement input) {
+        LOGGER.debug("Looking to field with type {} and name {}", input.getAttribute("type"), input.getAttribute("name"));
         return input.getAttribute("type").equals("email") || input.getAttribute("type").equals("text");
     }
 
@@ -126,14 +131,14 @@ public class AuthServiceImpl implements AuthService {
 
     private WebElement findLoginInput(WebElement loginForm) {
         try {
-            return loginForm.findElement(By.xpath("//input[@type='email']"));
+            return loginForm.findElement(By.xpath(".//input[@type='email']"));
         } catch (NoSuchElementException ex) {
-            return loginForm.findElement(By.xpath("//input[@type='text']"));
+            return loginForm.findElement(By.xpath(".//input[@type='text']"));
         }
     }
 
     private WebElement findPasswordInput(WebElement loginForm) {
-        return loginForm.findElement(By.xpath("//input[@type='password']"));
+        return loginForm.findElement(By.xpath(".//input[@type='password']"));
     }
 
 }

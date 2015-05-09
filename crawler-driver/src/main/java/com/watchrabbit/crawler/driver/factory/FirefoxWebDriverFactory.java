@@ -56,6 +56,7 @@ public class FirefoxWebDriverFactory implements RemoteWebDriverFactory {
     @Override
     public void returnWebDriver(RemoteWebDriver driver) {
         if (driver != null) {
+            driver.manage().deleteAllCookies();
             if (drivers.size() > maxWaitingDriverSessions) {
                 driver.quit();
             } else {
