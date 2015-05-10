@@ -43,29 +43,32 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ManagerServiceImpl implements ManagerService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ManagerServiceImpl.class);
-    
+
     Clock clock = SystemClock.getInstance();
-    
+
     @Value("${crawler.manager.urlProcessingTimeout:3600}")
     int urlProcessingTimeout;
-    
+
+    @Value("${crawler.manager.queueTopResultsLimit:1000}")
+    int queueTopResultsLimit;
+
     @Autowired
     ExecutorServiceFacade executorServiceFacade;
-    
+
     @Autowired
     AddressRepository addressRepository;
-    
+
     @Autowired
     ImportancePolicy importancePolicy;
-    
+
     @Autowired
     RevisitPolicy revisitPolicy;
-    
+
     @Autowired
     LeaseService leaseService;
-    
+
     @Autowired
     EtiquettePolicy etiquettePolicy;
 
@@ -83,7 +86,7 @@ public class ManagerServiceImpl implements ManagerService {
     public void orderExecution(List<String> ids) {
         ids.forEach(this::orderExecution);
     }
-    
+
     @Override
     public void orderExecution(String id) {
         Address address = addressRepository.find(id);
@@ -96,8 +99,9 @@ public class ManagerServiceImpl implements ManagerService {
                 .withId(id)
                 .build()
         );
+        putOnQueueEnd(address);
     }
-    
+
     @Override
     public void onCrawlResult(CrawlResult result) {
         importancePolicy.processCrawlResult(result);
@@ -108,35 +112,42 @@ public class ManagerServiceImpl implements ManagerService {
         leaseService.removeLease(result.getUrl());
         addressRepository.save(address);
     }
-    
+
     @Todo("improve this, better limit usage")
     @Override
     public List<String> findIdsForExecution(int limit) {
-        return addressRepository.findOrderByNextExecutionDate(limit).stream()
+        return addressRepository.findOrderByNextExecutionDate(queueTopResultsLimit).stream()
                 .map(address -> new AddressWrapper(address))
                 .distinct()
                 .map(wrapper -> wrapper.address)
                 .filter(address -> etiquettePolicy.canProcessDomain(address.getDomainName()))
                 .filter(address -> !leaseService.hasLease(address.getUrl()))
                 .map(adress -> adress.getId())
+                .limit(limit)
                 .collect(toList());
     }
-    
+
+    private void putOnQueueEnd(Address address) {
+        addressRepository.findLastByNextExecutionDate()
+                .ifPresent(last -> address.setNextExecutionDate(last.getNextExecutionDate()));
+        addressRepository.save(address);
+    }
+
     private class AddressWrapper {
-        
+
         Address address;
-        
+
         public AddressWrapper(Address address) {
             this.address = address;
         }
-        
+
         @Override
         public int hashCode() {
             int hash = 7;
             hash = 17 * hash + Objects.hashCode(this.address.getDomainName());
             return hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -151,7 +162,7 @@ public class ManagerServiceImpl implements ManagerService {
             }
             return true;
         }
-        
+
     }
-    
+
 }

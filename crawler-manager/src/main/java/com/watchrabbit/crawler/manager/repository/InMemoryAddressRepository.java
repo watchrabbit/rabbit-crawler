@@ -18,6 +18,7 @@ package com.watchrabbit.crawler.manager.repository;
 import com.watchrabbit.crawler.manager.model.Address;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
@@ -57,6 +58,13 @@ public class InMemoryAddressRepository implements AddressRepository {
                 .sorted((first, second) -> second.getNextExecutionDate().compareTo(first.getNextExecutionDate()))
                 .limit(limit)
                 .collect(toList());
+    }
+
+    @Override
+    public Optional<Address> findLastByNextExecutionDate() {
+        return addressesById.values().stream()
+                .sorted((first, second) -> first.getNextExecutionDate().compareTo(second.getNextExecutionDate()))
+                .findAny();
     }
 
 }
