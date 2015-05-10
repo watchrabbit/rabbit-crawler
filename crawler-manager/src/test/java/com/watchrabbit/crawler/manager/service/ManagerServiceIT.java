@@ -75,15 +75,5 @@ public class ManagerServiceIT extends ContextTestBase {
         managerService.findIdsForExecution(1000).forEach(managerService::orderExecution);
         sleep(10, TimeUnit.SECONDS);
         System.err.println("THIRD BATCH");
-        addressRepository.findOrderByNextExecutionDate(1000).stream()
-                .map(queued -> queued.getDomainName() + " " + queued.getUrl() + " " + queued.getNextExecutionDate())
-                .sorted()
-                .forEach(System.out::println);
-        managerService.findIdsForExecution(1000).forEach(managerService::orderExecution);
-        System.err.println("FOURTH BATCH");
-        addressRepository.findOrderByNextExecutionDate(1000).stream()
-                .map(queued -> queued.getDomainName() + " " + queued.getUrl() + " " + queued.getNextExecutionDate())
-                .sorted()
-                .forEach(System.out::println);
     }
 }

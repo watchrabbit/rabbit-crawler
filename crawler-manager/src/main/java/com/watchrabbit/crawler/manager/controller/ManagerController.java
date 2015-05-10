@@ -53,6 +53,6 @@ public class ManagerController {
 
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public void addPage(@RequestBody PageForm form) {
-        managerService.addPage(form.getUrl());
+        managerService.addPage(form.getUrl(), form.getGatewayUrl());
     }
 }

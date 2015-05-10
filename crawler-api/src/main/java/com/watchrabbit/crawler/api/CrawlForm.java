@@ -27,6 +27,26 @@ public class CrawlForm {
 
     private String id;
 
+    private boolean gateway;
+
+    private String keyword;
+
+    public boolean isGateway() {
+        return gateway;
+    }
+
+    public void setGateway(boolean gateway) {
+        this.gateway = gateway;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     public String getId() {
         return id;
     }
@@ -71,6 +91,16 @@ public class CrawlForm {
 
         public Builder withId(final String id) {
             this.item.id = id;
+            return this;
+        }
+
+        public Builder withGateway(final boolean gateway) {
+            this.item.gateway = gateway;
+            return this;
+        }
+
+        public Builder withKeyword(final String keyword) {
+            this.item.keyword = keyword;
             return this;
         }
 

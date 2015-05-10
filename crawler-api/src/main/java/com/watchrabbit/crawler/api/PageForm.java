@@ -23,12 +23,45 @@ public class PageForm {
 
     private String url;
 
+    private String gatewayUrl;
+
+    public String getGatewayUrl() {
+        return gatewayUrl;
+    }
+
+    public void setGatewayUrl(String gatewayUrl) {
+        this.gatewayUrl = gatewayUrl;
+    }
+
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public static class Builder {
+
+        private final PageForm item;
+
+        public Builder() {
+            this.item = new PageForm();
+        }
+
+        public Builder withUrl(final String url) {
+            this.item.url = url;
+            return this;
+        }
+
+        public Builder withGatewayUrl(final String gatewayUrl) {
+            this.item.gatewayUrl = gatewayUrl;
+            return this;
+        }
+
+        public PageForm build() {
+            return this.item;
+        }
     }
 
 }

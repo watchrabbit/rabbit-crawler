@@ -27,9 +27,29 @@ public class Address {
 
     private String url;
 
+    private boolean gateway;
+
+    private String keyword;
+
     private String domainName;
 
     private Date nextExecutionDate;
+
+    public boolean isGateway() {
+        return gateway;
+    }
+
+    public void setGateway(boolean gateway) {
+        this.gateway = gateway;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
 
     public String getId() {
         return id;
@@ -78,6 +98,16 @@ public class Address {
 
         public Builder withUrl(final String url) {
             this.item.url = url;
+            return this;
+        }
+
+        public Builder withGateway(final boolean gateway) {
+            this.item.gateway = gateway;
+            return this;
+        }
+
+        public Builder withKeyword(final String keyword) {
+            this.item.keyword = keyword;
             return this;
         }
 
