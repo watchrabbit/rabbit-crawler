@@ -55,7 +55,7 @@ public class FirefoxWebDriverFactory implements RemoteWebDriverFactory {
             RemoteWebDriver ff = new FirefoxDriver(profile);
             return ff;
         } else {
-            LOGGER.debug("Returning driver from pool");
+            LOGGER.debug("Returning {} driver from pool", drivers.peek().getWindowHandle());
             return drivers.poll();
         }
     }
@@ -63,7 +63,7 @@ public class FirefoxWebDriverFactory implements RemoteWebDriverFactory {
     @Override
     public void returnWebDriver(RemoteWebDriver driver) {
         if (driver != null) {
-            LOGGER.info("Moving driver back to pool");
+            LOGGER.info("Moving {} driver back to pool", driver.getWindowHandle());
             if (drivers.size() > maxWaitingDriverSessions) {
                 LOGGER.debug("Maximum waiting sessions exceeded, quitting driver");
                 driver.quit();
