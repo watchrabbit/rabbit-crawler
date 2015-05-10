@@ -15,6 +15,7 @@
  */
 package com.watchrabbit.crawler.manager.facade;
 
+import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import com.watchrabbit.crawler.manager.service.ManagerService;
@@ -32,6 +33,11 @@ public class LocalManagerServiceFacade implements ManagerServiceFacade {
     @Override
     public void consumeResult(CrawlResult result) {
         managerService.onCrawlResult(result);
+    }
+
+    @Override
+    public void onError(CrawlForm form) {
+        managerService.onCrawlError(form);
     }
 
 }

@@ -102,6 +102,8 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                     .withImportanceFactor(importanceFactor)
                     .build()
             );
+        } catch (Exception ex) {
+            managerServiceFacade.onError(form);
         } finally {
             remoteWebDriverFactory.returnWebDriver(driver);
         }
@@ -156,6 +158,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 }
             }
         }
+        LOGGER.error("Cannot find form in gateway page");
         return Optional.<SearchForm>empty();
     }
 

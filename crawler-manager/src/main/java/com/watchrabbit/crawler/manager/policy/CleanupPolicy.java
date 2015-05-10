@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.watchrabbit.crawler.manager.service;
+package com.watchrabbit.crawler.manager.policy;
 
-import com.watchrabbit.crawler.api.CrawlForm;
-import com.watchrabbit.crawler.api.CrawlResult;
-import java.util.List;
+import com.watchrabbit.crawler.api.LinkDto;
+import com.watchrabbit.crawler.manager.model.Address;
 
 /**
  *
  * @author Mariusz
  */
-public interface ManagerService {
+public interface CleanupPolicy {
 
-    void orderExecution(String id);
+    void onError(Address address);
 
-    void orderExecution(List<String> id);
-
-    List<String> findIdsForExecution(int limit);
-
-    void onCrawlResult(CrawlResult result);
-
-    void addPage(String url, boolean isGateway);
-
-    void onCrawlError(CrawlForm form);
+    boolean isOnBlacklist(LinkDto linkDto);
 
 }

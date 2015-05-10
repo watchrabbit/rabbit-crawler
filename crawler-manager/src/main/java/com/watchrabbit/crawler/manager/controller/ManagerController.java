@@ -15,6 +15,7 @@
  */
 package com.watchrabbit.crawler.manager.controller;
 
+import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.api.PageForm;
 import com.watchrabbit.crawler.manager.service.ManagerService;
@@ -49,6 +50,11 @@ public class ManagerController {
     @RequestMapping(value = "/result", method = RequestMethod.POST)
     public void onResult(@RequestBody CrawlResult crawlResult) {
         managerService.onCrawlResult(crawlResult);
+    }
+
+    @RequestMapping(value = "/error", method = RequestMethod.POST)
+    public void onResult(@RequestBody CrawlForm form) {
+        managerService.onCrawlError(form);
     }
 
     @RequestMapping(value = "/page", method = RequestMethod.POST)

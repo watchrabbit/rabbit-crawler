@@ -21,6 +21,8 @@ import com.watchrabbit.crawler.manager.facade.ExecutorServiceFacade;
 import com.watchrabbit.crawler.manager.facade.LocalExecutorServiceFacade;
 import com.watchrabbit.crawler.manager.facade.LocalManagerServiceFacade;
 import com.watchrabbit.crawler.manager.policy.BasicRevisitPolicy;
+import com.watchrabbit.crawler.manager.policy.CleanupPolicy;
+import com.watchrabbit.crawler.manager.policy.DefaultCleanupPolicy;
 import com.watchrabbit.crawler.manager.policy.DefaultEtiquettePolicy;
 import com.watchrabbit.crawler.manager.policy.EtiquettePolicy;
 import com.watchrabbit.crawler.manager.policy.ImportancePolicy;
@@ -96,4 +98,9 @@ public class ManagerServiceConfig {
         return new InMemoryAddressOPICRepository();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(CleanupPolicy.class)
+    public CleanupPolicy cleanupPolicy() {
+        return new DefaultCleanupPolicy();
+    }
 }

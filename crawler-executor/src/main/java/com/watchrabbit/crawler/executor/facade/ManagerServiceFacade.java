@@ -15,6 +15,7 @@
  */
 package com.watchrabbit.crawler.executor.facade;
 
+import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 
 /**
@@ -23,5 +24,7 @@ import com.watchrabbit.crawler.api.CrawlResult;
  */
 public interface ManagerServiceFacade {
 
-    public void consumeResult(CrawlResult result);
+    void consumeResult(CrawlResult result);
+
+    void onError(CrawlForm form);
 }

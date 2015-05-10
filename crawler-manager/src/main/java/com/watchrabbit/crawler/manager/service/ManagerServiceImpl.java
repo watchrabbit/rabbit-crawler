@@ -21,6 +21,7 @@ import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.manager.facade.ExecutorServiceFacade;
 import com.watchrabbit.crawler.manager.model.Address;
+import com.watchrabbit.crawler.manager.policy.CleanupPolicy;
 import com.watchrabbit.crawler.manager.policy.EtiquettePolicy;
 import com.watchrabbit.crawler.manager.policy.ImportancePolicy;
 import com.watchrabbit.crawler.manager.policy.RevisitPolicy;
@@ -71,6 +72,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Autowired
     EtiquettePolicy etiquettePolicy;
 
+    @Autowired
+    CleanupPolicy cleanupPolicy;
+
     @Override
     public void addPage(String url, boolean isGateway) {
         Address address = new Address.Builder()
@@ -80,6 +84,12 @@ public class ManagerServiceImpl implements ManagerService {
                 .withDomainName(InternetAddress.getDomainName(url))
                 .build();
         addressRepository.save(address);
+    }
+
+    @Override
+    public void onCrawlError(CrawlForm form) {
+        Address address = addressRepository.find(form.getId());
+        cleanupPolicy.onError(address);
     }
 
     @Override
