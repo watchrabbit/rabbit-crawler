@@ -18,6 +18,7 @@ package com.watchrabbit.crawler.executor.service;
 import com.watchrabbit.commons.clock.Stopwatch;
 import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
+import com.watchrabbit.crawler.api.LinkDto;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
 import com.watchrabbit.crawler.driver.service.LoaderService;
 import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
@@ -62,7 +63,11 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
         try {
             Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form.getUrl(), session));
 
-            List<String> links = collectLinks(driver);
+            List<LinkDto> links = collectLinks(driver).stream()
+                    .map(link -> new LinkDto.Builder()
+                            .withUrl(link)
+                            .build()
+                    ).collect(toList());
             double importanceFactor = crawlListener.accept(driver);
             managerServiceFacade.consumeResult(new CrawlResult.Builder()
                     .withDomain(form.getDomain())

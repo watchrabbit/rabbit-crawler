@@ -21,6 +21,8 @@ import javax.annotation.PreDestroy;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +33,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class FirefoxWebDriverFactory implements RemoteWebDriverFactory {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FirefoxWebDriverFactory.class);
+
     private final Queue<RemoteWebDriver> drivers = new ConcurrentLinkedQueue<>();
 
-    @Value("${crawler.driver.maxWaitingDriverSessions:10}")
+    @Value("${crawler.driver.maxWaitingDriverSessions:5}")
     private int maxWaitingDriverSessions;
 
     @PreDestroy
@@ -43,12 +47,15 @@ public class FirefoxWebDriverFactory implements RemoteWebDriverFactory {
 
     @Override
     public synchronized RemoteWebDriver produceDriver() {
+        LOGGER.info("Returning new driver");
         if (drivers.isEmpty()) {
+            LOGGER.debug("Creating new driver");
             FirefoxProfile profile = new FirefoxProfile();
             profile.setAcceptUntrustedCertificates(true);
             RemoteWebDriver ff = new FirefoxDriver(profile);
             return ff;
         } else {
+            LOGGER.debug("Returning driver from pool");
             return drivers.poll();
         }
     }
@@ -56,8 +63,9 @@ public class FirefoxWebDriverFactory implements RemoteWebDriverFactory {
     @Override
     public void returnWebDriver(RemoteWebDriver driver) {
         if (driver != null) {
-            driver.manage().deleteAllCookies();
+            LOGGER.info("Moving driver back to pool");
             if (drivers.size() > maxWaitingDriverSessions) {
+                LOGGER.debug("Maximum waiting sessions exceeded, quitting driver");
                 driver.quit();
             } else {
                 driver.manage().deleteAllCookies();

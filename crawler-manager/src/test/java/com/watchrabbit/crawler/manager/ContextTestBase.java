@@ -42,7 +42,7 @@ public class ContextTestBase {
 
     @Bean
     public LinkFilter linkFilter() {
-        return (links) -> links.stream().filter(link -> link.contains("scalingapp") || link.contains("watchrabbit")).collect(toList());
+        return (links) -> links.stream().filter(link -> link.getUrl().contains("scalingapp") || link.getUrl().contains("watchrabbit")).collect(toList());
     }
 
 }

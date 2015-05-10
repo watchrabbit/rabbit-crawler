@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class CrawlResult {
 
-    private List<String> links;
+    private List<LinkDto> links;
 
     private long miliseconds;
 
@@ -43,11 +43,11 @@ public class CrawlResult {
         this.importanceFactor = importanceFactor;
     }
 
-    public List<String> getLinks() {
+    public List<LinkDto> getLinks() {
         return links;
     }
 
-    public void setLinks(List<String> links) {
+    public void setLinks(List<LinkDto> links) {
         this.links = links;
     }
 
@@ -91,7 +91,7 @@ public class CrawlResult {
             this.item = new CrawlResult();
         }
 
-        public Builder withLinks(final List<String> links) {
+        public Builder withLinks(final List<LinkDto> links) {
             this.item.links = links;
             return this;
         }

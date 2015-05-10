@@ -15,6 +15,7 @@
  */
 package com.watchrabbit.crawler.manager.policy;
 
+import com.watchrabbit.crawler.api.LinkDto;
 import java.util.List;
 
 /**
@@ -23,5 +24,5 @@ import java.util.List;
  */
 public interface LinkFilter {
 
-    List<String> filterLinks(List<String> links);
+    List<LinkDto> filterLinks(List<LinkDto> links);
 }

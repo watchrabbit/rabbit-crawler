@@ -16,6 +16,7 @@
 package com.watchrabbit.crawler.manager.policy;
 
 import com.watchrabbit.crawler.api.CrawlResult;
+import com.watchrabbit.crawler.api.LinkDto;
 import com.watchrabbit.crawler.manager.model.Address;
 import com.watchrabbit.crawler.manager.model.AddressOPIC;
 import com.watchrabbit.crawler.manager.repository.AddressOPICRepository;
@@ -33,24 +34,24 @@ import org.springframework.beans.factory.annotation.Value;
  * @author Mariusz
  */
 public class OPICImportancePolicy implements ImportancePolicy {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(OPICImportancePolicy.class);
-
+    
     @Value("${crawler.manager.opicHistoricalResults:10}")
     int opicHistoricalResults;
-
+    
     @Autowired
     AddressRepository addressRepository;
-
+    
     @Autowired
     RevisitPolicy revisitPolicy;
-
+    
     @Autowired
     AddressOPICRepository addressOPICRepository;
-
+    
     @Autowired(required = false)
     LinkFilter linkFilter;
-
+    
     @Override
     public void processCrawlResult(CrawlResult crawlResult) {
         AddressOPIC addressOPIC = addressOPICRepository.find(crawlResult.getId());
@@ -60,7 +61,7 @@ public class OPICImportancePolicy implements ImportancePolicy {
                     .build();
         }
         double cash = addressOPIC.getCash();
-        List<String> links = crawlResult.getLinks();
+        List<LinkDto> links = crawlResult.getLinks();
         if (linkFilter != null) {
             links = linkFilter.filterLinks(links);
         }
@@ -70,7 +71,7 @@ public class OPICImportancePolicy implements ImportancePolicy {
         addressOPIC.addCash(crawlResult.getImportanceFactor());
         addressOPICRepository.save(addressOPIC);
     }
-
+    
     @Override
     public double getImportance(String id) {
         AddressOPIC addressOPIC = addressOPICRepository.find(id);
@@ -84,15 +85,16 @@ public class OPICImportancePolicy implements ImportancePolicy {
         }
         return addressOPIC.getImportance();
     }
-
-    private void distribute(String url, double change) {
-        Address address = addressRepository.findByUrl(url);
+    
+    private void distribute(LinkDto link, double change) {
+        Address address = addressRepository.findByUrlAndKeyword(link.getUrl(), link.getKeyword());
         if (address == null) {
             Date nextExecutionDate = revisitPolicy.getNextExecutionDate(change);
             address = new Address.Builder()
                     .withNextExecutionDate(nextExecutionDate)
-                    .withDomainName(InternetAddress.getDomainName(url))
-                    .withUrl(url)
+                    .withDomainName(InternetAddress.getDomainName(link.getUrl()))
+                    .withUrl(link.getUrl())
+                    .withKeyword(link.getKeyword())
                     .build();
             addressRepository.save(address);
         }
@@ -105,5 +107,5 @@ public class OPICImportancePolicy implements ImportancePolicy {
         addressOPIC.addCash(change);
         addressOPICRepository.save(addressOPIC);
     }
-
+    
 }

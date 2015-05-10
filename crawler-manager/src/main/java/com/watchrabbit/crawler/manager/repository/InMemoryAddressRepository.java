@@ -39,7 +39,7 @@ public class InMemoryAddressRepository implements AddressRepository {
     }
 
     @Override
-    public Address findByUrl(String url) {
+    public Address findByUrlAndKeyword(String url, String keyword) {
         return addressesByAddress.get(url);
     }
 
@@ -49,7 +49,7 @@ public class InMemoryAddressRepository implements AddressRepository {
             address.setId(UUID.randomUUID().toString());
         }
         addressesById.put(address.getId(), address);
-        addressesByAddress.put(address.getUrl(), address);
+        addressesByAddress.put(address.getUrl() + "||" + address.getKeyword(), address);
     }
 
     @Override

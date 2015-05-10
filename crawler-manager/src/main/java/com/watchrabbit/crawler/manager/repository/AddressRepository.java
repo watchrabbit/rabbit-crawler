@@ -27,7 +27,7 @@ public interface AddressRepository {
 
     Address find(String id);
 
-    Address findByUrl(String url);
+    Address findByUrlAndKeyword(String url, String keyword);
 
     void save(Address address);
 
