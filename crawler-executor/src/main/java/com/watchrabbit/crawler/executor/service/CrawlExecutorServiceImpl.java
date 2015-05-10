@@ -27,10 +27,13 @@ import com.watchrabbit.crawler.executor.listener.CrawlListener;
 import com.watchrabbit.crawler.executor.strategy.KeywordGenerateStrategy;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import static java.util.stream.Collectors.toList;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,35 +46,35 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrawlExecutorServiceImpl implements CrawlExecutorService {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(CrawlExecutorServiceImpl.class);
-
+    
     @Autowired
     AuthServiceFacade authServiceFacade;
-
+    
     @Autowired
     RemoteWebDriverFactory remoteWebDriverFactory;
-
+    
     @Autowired
     ManagerServiceFacade managerServiceFacade;
-
+    
     @Autowired
     LoaderService loaderService;
-
+    
     @Autowired
     KeywordGenerateStrategy keywordGenerateStrategy;
-
+    
     @Autowired(required = false)
     CrawlListener crawlListener = driver -> 0;
-
+    
     @Override
     public void processPage(CrawlForm form) {
         Collection<Cookie> session = authServiceFacade.getSession(form.getDomain());
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
         try {
-            Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form.getUrl(), session));
+            Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form, session));
             LOGGER.debug("Finished loading {} in {}", form.getUrl(), stopwatch.getExecutionTime(TimeUnit.MILLISECONDS));
-
+            
             List<LinkDto> links = collectLinks(driver).stream()
                     .map(link -> new LinkDto.Builder()
                             .withUrl(link)
@@ -102,19 +105,29 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
             remoteWebDriverFactory.returnWebDriver(driver);
         }
     }
-
-    private void enableSession(RemoteWebDriver driver, String url, Collection<Cookie> session) {
-        driver.get(url);
+    
+    private void enableSession(RemoteWebDriver driver, CrawlForm form, Collection<Cookie> session) {
+        driver.get(form.getUrl());
         loaderService.waitFor(driver);
         if (!session.isEmpty()) {
             driver.manage().deleteAllCookies();
             session.forEach(driver.manage()::addCookie);
-
-            driver.get(url);
+            
+            driver.get(form.getUrl());
             loaderService.waitFor(driver);
         }
+        if (StringUtils.isNotEmpty(form.getKeyword())) {
+            Optional<SearchForm> searchFormOptional = findSearchInput(driver);
+            searchFormOptional.ifPresent(searchForm -> {
+                searchForm.input.sendKeys(form.getKeyword());
+                loaderService.waitFor(driver);
+                searchForm.submit.click();
+                loaderService.waitFor(driver);
+            });
+            
+        }
     }
-
+    
     private List<String> collectLinks(RemoteWebDriver driver) {
         return driver.findElements(By.xpath("//a")).stream()
                 .filter(element -> element.isDisplayed())
@@ -123,5 +136,36 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 .filter(link -> link.startsWith("http"))
                 .distinct()
                 .collect(toList());
+    }
+    
+    private Optional<SearchForm> findSearchInput(RemoteWebDriver driver) {
+        for (WebElement form : driver.findElements(By.xpath("//form"))) {
+            LOGGER.debug("Looking to form with action {}", form.getAttribute("action"));
+            List<WebElement> inputs = form.findElements(By.xpath(".//input")).stream()
+                    .filter(input -> input.getAttribute("type").equals("text"))
+                    .filter(input -> input.isDisplayed())
+                    .collect(toList());
+            if (inputs.size() == 1) {
+                WebElement submit = form.findElement(By.xpath(".//button[@type='submit']"));
+                if (submit == null) {
+                    submit = form.findElement(By.xpath(".//input[@type='submit']"));
+                }
+                return Optional.of(new SearchForm(inputs.get(0), submit));
+            }
+        }
+        return Optional.<SearchForm>empty();
+    }
+
+    private class SearchForm {
+
+        WebElement input;
+
+        WebElement submit;
+
+        public SearchForm(WebElement input, WebElement submit) {
+            this.input = input;
+            this.submit = submit;
+        }
+
     }
 }
