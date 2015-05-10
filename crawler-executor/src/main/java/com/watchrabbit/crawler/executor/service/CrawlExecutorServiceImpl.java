@@ -46,27 +46,27 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrawlExecutorServiceImpl implements CrawlExecutorService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CrawlExecutorServiceImpl.class);
-    
+
     @Autowired
     AuthServiceFacade authServiceFacade;
-    
+
     @Autowired
     RemoteWebDriverFactory remoteWebDriverFactory;
-    
+
     @Autowired
     ManagerServiceFacade managerServiceFacade;
-    
+
     @Autowired
     LoaderService loaderService;
-    
+
     @Autowired
     KeywordGenerateStrategy keywordGenerateStrategy;
-    
+
     @Autowired(required = false)
     CrawlListener crawlListener = driver -> 0;
-    
+
     @Override
     public void processPage(CrawlForm form) {
         Collection<Cookie> session = authServiceFacade.getSession(form.getDomain());
@@ -74,13 +74,14 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
         try {
             Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form, session));
             LOGGER.debug("Finished loading {} in {}", form.getUrl(), stopwatch.getExecutionTime(TimeUnit.MILLISECONDS));
-            
+
             List<LinkDto> links = collectLinks(driver).stream()
                     .map(link -> new LinkDto.Builder()
                             .withUrl(link)
                             .build()
                     ).collect(toList());
             if (form.isGateway()) {
+                LOGGER.debug("Processing gateway {}", form.getUrl());
                 List<String> keywords = keywordGenerateStrategy.generateKeywords(form, driver);
                 links.addAll(
                         keywords.stream()
@@ -105,14 +106,14 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
             remoteWebDriverFactory.returnWebDriver(driver);
         }
     }
-    
+
     private void enableSession(RemoteWebDriver driver, CrawlForm form, Collection<Cookie> session) {
         driver.get(form.getUrl());
         loaderService.waitFor(driver);
         if (!session.isEmpty()) {
             driver.manage().deleteAllCookies();
             session.forEach(driver.manage()::addCookie);
-            
+
             driver.get(form.getUrl());
             loaderService.waitFor(driver);
         }
@@ -124,10 +125,10 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 searchForm.submit.click();
                 loaderService.waitFor(driver);
             });
-            
+
         }
     }
-    
+
     private List<String> collectLinks(RemoteWebDriver driver) {
         return driver.findElements(By.xpath("//a")).stream()
                 .filter(element -> element.isDisplayed())
@@ -137,7 +138,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 .distinct()
                 .collect(toList());
     }
-    
+
     private Optional<SearchForm> findSearchInput(RemoteWebDriver driver) {
         for (WebElement form : driver.findElements(By.xpath("//form"))) {
             LOGGER.debug("Looking to form with action {}", form.getAttribute("action"));
@@ -146,11 +147,13 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                     .filter(input -> input.isDisplayed())
                     .collect(toList());
             if (inputs.size() == 1) {
-                WebElement submit = form.findElement(By.xpath(".//button[@type='submit']"));
-                if (submit == null) {
-                    submit = form.findElement(By.xpath(".//input[@type='submit']"));
+                List<WebElement> submit = form.findElements(By.xpath(".//button[@type='submit']"));
+                if (submit.isEmpty()) {
+                    submit = form.findElements(By.xpath(".//input[@type='submit']"));
                 }
-                return Optional.of(new SearchForm(inputs.get(0), submit));
+                if (submit.size() == 1) {
+                    return Optional.of(new SearchForm(inputs.get(0), submit.get(0)));
+                }
             }
         }
         return Optional.<SearchForm>empty();

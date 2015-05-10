@@ -89,6 +89,7 @@ public class OPICImportancePolicy implements ImportancePolicy {
     private void distribute(LinkDto link, double change) {
         Address address = addressRepository.findByUrlAndKeyword(link.getUrl(), link.getKeyword());
         if (address == null) {
+            LOGGER.debug("Creating new address {} with keyword {}", link.getUrl(), link.getKeyword());
             Date nextExecutionDate = revisitPolicy.getNextExecutionDate(change);
             address = new Address.Builder()
                     .withNextExecutionDate(nextExecutionDate)

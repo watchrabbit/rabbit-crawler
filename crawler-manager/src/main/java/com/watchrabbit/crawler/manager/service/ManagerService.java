@@ -32,6 +32,6 @@ public interface ManagerService {
 
     void onCrawlResult(CrawlResult result);
 
-    void addPage(String url, String gatewayUrl);
+    void addPage(String url, boolean isGateway);
 
 }

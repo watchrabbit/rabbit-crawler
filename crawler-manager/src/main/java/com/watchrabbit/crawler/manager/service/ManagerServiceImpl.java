@@ -42,62 +42,55 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ManagerServiceImpl implements ManagerService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ManagerServiceImpl.class);
-    
+
     Clock clock = SystemClock.getInstance();
-    
+
     @Value("${crawler.manager.urlProcessingTimeout:3600}")
     int urlProcessingTimeout;
-    
+
     @Value("${crawler.manager.queueTopResultsLimit:1000}")
     int queueTopResultsLimit;
-    
+
     @Autowired
     ExecutorServiceFacade executorServiceFacade;
-    
+
     @Autowired
     AddressRepository addressRepository;
-    
+
     @Autowired
     ImportancePolicy importancePolicy;
-    
+
     @Autowired
     RevisitPolicy revisitPolicy;
-    
+
     @Autowired
     LeaseService leaseService;
-    
+
     @Autowired
     EtiquettePolicy etiquettePolicy;
-    
+
     @Override
-    public void addPage(String url, String gatewayUrl) {
+    public void addPage(String url, boolean isGateway) {
         Address address = new Address.Builder()
                 .withUrl(url)
                 .withNextExecutionDate(new Date())
+                .withGateway(isGateway)
                 .withDomainName(InternetAddress.getDomainName(url))
                 .build();
         addressRepository.save(address);
-        
-        Address gatewayAddress = new Address.Builder()
-                .withUrl(gatewayUrl)
-                .withGateway(true)
-                .withNextExecutionDate(new Date())
-                .withDomainName(InternetAddress.getDomainName(url))
-                .build();
-        addressRepository.save(gatewayAddress);
     }
-    
+
     @Override
     public void orderExecution(List<String> ids) {
         ids.forEach(this::orderExecution);
     }
-    
+
     @Override
     public void orderExecution(String id) {
         Address address = addressRepository.find(id);
-        LOGGER.info("Pushing {} to execution", address.getUrl());
+        LOGGER.info("Pushing {} to execution with keyword {}", address.getUrl(), address.getKeyword());
         etiquettePolicy.onDomainProcessing(address.getDomainName());
         leaseService.createLease(address.getUrl(), urlProcessingTimeout);
         executorServiceFacade.processPage(new CrawlForm.Builder()
@@ -110,7 +103,7 @@ public class ManagerServiceImpl implements ManagerService {
         );
         putOnQueueEnd(address);
     }
-    
+
     @Override
     public void onCrawlResult(CrawlResult result) {
         importancePolicy.processCrawlResult(result);
@@ -121,7 +114,7 @@ public class ManagerServiceImpl implements ManagerService {
         leaseService.removeLease(result.getId());
         addressRepository.save(address);
     }
-    
+
     @Override
     public List<String> findIdsForExecution(int limit) {
         return addressRepository.findOrderByNextExecutionDate(queueTopResultsLimit).stream()
@@ -134,28 +127,28 @@ public class ManagerServiceImpl implements ManagerService {
                 .limit(limit)
                 .collect(toList());
     }
-    
+
     private void putOnQueueEnd(Address address) {
         addressRepository.findLastByNextExecutionDate()
                 .ifPresent(last -> address.setNextExecutionDate(last.getNextExecutionDate()));
         addressRepository.save(address);
     }
-    
+
     private class AddressWrapper {
-        
+
         Address address;
-        
+
         public AddressWrapper(Address address) {
             this.address = address;
         }
-        
+
         @Override
         public int hashCode() {
             int hash = 7;
             hash = 17 * hash + Objects.hashCode(this.address.getDomainName());
             return hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -170,7 +163,7 @@ public class ManagerServiceImpl implements ManagerService {
             }
             return true;
         }
-        
+
     }
-    
+
 }

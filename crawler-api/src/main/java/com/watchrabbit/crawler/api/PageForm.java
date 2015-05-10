@@ -23,15 +23,7 @@ public class PageForm {
 
     private String url;
 
-    private String gatewayUrl;
-
-    public String getGatewayUrl() {
-        return gatewayUrl;
-    }
-
-    public void setGatewayUrl(String gatewayUrl) {
-        this.gatewayUrl = gatewayUrl;
-    }
+    private boolean gateway;
 
     public String getUrl() {
         return url;
@@ -39,6 +31,14 @@ public class PageForm {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isGateway() {
+        return gateway;
+    }
+
+    public void setGateway(boolean gateway) {
+        this.gateway = gateway;
     }
 
     public static class Builder {
@@ -54,8 +54,8 @@ public class PageForm {
             return this;
         }
 
-        public Builder withGatewayUrl(final String gatewayUrl) {
-            this.item.gatewayUrl = gatewayUrl;
+        public Builder withGateway(final boolean gateway) {
+            this.item.gateway = gateway;
             return this;
         }
 

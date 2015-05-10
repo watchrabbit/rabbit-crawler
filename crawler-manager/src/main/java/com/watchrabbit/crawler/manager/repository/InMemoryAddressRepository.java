@@ -40,7 +40,7 @@ public class InMemoryAddressRepository implements AddressRepository {
 
     @Override
     public Address findByUrlAndKeyword(String url, String keyword) {
-        return addressesByAddress.get(url);
+        return addressesByAddress.get(url + "||" + keyword);
     }
 
     @Override
