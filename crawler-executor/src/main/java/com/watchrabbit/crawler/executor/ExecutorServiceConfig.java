@@ -19,7 +19,10 @@ import com.watchrabbit.crawler.auth.service.AuthService;
 import com.watchrabbit.crawler.driver.EnableWebDrivers;
 import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
 import com.watchrabbit.crawler.executor.facade.LocalAuthServiceClient;
+import com.watchrabbit.crawler.executor.strategy.KeywordGenerateStrategy;
+import com.watchrabbit.crawler.executor.strategy.PageContentWordsStrategy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +40,12 @@ public class ExecutorServiceConfig {
     @ConditionalOnClass(AuthService.class)
     public AuthServiceFacade authServiceFacade() {
         return new LocalAuthServiceClient();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(KeywordGenerateStrategy.class)
+    public KeywordGenerateStrategy keywordGenerateStrategy() {
+        return new PageContentWordsStrategy();
     }
 
 }

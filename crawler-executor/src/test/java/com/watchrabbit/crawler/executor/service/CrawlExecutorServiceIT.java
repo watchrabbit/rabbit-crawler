@@ -64,6 +64,21 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
     }
 
     @Test
+    public void shouldCollectKeywords() {
+        crawlExecutorService.processPage(new CrawlForm.Builder()
+                .withDomain("scalingapp.com")
+                .withGateway(true)
+                .withUrl("https://scalingapp.com")
+                .build()
+        );
+
+        ArgumentCaptor<CrawlResult> argumentCaptor = ArgumentCaptor.forClass(CrawlResult.class);
+        verify(managerServiceFacade).consumeResult(argumentCaptor.capture());
+
+        assertThat(argumentCaptor.getValue().getLinks()).isNotEmpty();
+    }
+
+    @Test
     public void shouldLogInAndCollect() {
         authService.addNewAuthData(new AuthData.Builder()
                 .withDomain("api.watchrabbit.com")

@@ -24,6 +24,7 @@ import com.watchrabbit.crawler.driver.service.LoaderService;
 import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
 import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import com.watchrabbit.crawler.executor.listener.CrawlListener;
+import com.watchrabbit.crawler.executor.strategy.KeywordGenerateStrategy;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,8 @@ import static java.util.stream.Collectors.toList;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrawlExecutorServiceImpl implements CrawlExecutorService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CrawlExecutorServiceImpl.class);
 
     @Autowired
     AuthServiceFacade authServiceFacade;
@@ -53,6 +58,9 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
     @Autowired
     LoaderService loaderService;
 
+    @Autowired
+    KeywordGenerateStrategy keywordGenerateStrategy;
+
     @Autowired(required = false)
     CrawlListener crawlListener = driver -> 0;
 
@@ -62,12 +70,24 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
         RemoteWebDriver driver = remoteWebDriverFactory.produceDriver();
         try {
             Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form.getUrl(), session));
+            LOGGER.debug("Finished loading {} in {}", form.getUrl(), stopwatch.getExecutionTime(TimeUnit.MILLISECONDS));
 
             List<LinkDto> links = collectLinks(driver).stream()
                     .map(link -> new LinkDto.Builder()
                             .withUrl(link)
                             .build()
                     ).collect(toList());
+            if (form.isGateway()) {
+                List<String> keywords = keywordGenerateStrategy.generateKeywords(form, driver);
+                links.addAll(
+                        keywords.stream()
+                        .map(keyword -> new LinkDto.Builder()
+                                .withKeyword(keyword)
+                                .withUrl(form.getUrl())
+                                .build()
+                        ).collect(toList())
+                );
+            }
             double importanceFactor = crawlListener.accept(driver);
             managerServiceFacade.consumeResult(new CrawlResult.Builder()
                     .withDomain(form.getDomain())

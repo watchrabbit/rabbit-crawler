@@ -34,7 +34,7 @@ public class TaskScheduler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskScheduler.class);
 
-    @Value("${crawler.manager.maxQueueProcessingSize:1000}")
+    @Value("${crawler.batch.maxQueueProcessingSize:1000}")
     int maxQueueProcessingSize;
 
     @Autowired
