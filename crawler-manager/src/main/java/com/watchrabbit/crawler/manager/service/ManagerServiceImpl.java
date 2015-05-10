@@ -76,6 +76,11 @@ public class ManagerServiceImpl implements ManagerService {
     CleanupPolicy cleanupPolicy;
 
     @Override
+    public List<Address> findDiscoveredAddresses(int limit) {
+        return addressRepository.findOrderByNextExecutionDate(limit);
+    }
+
+    @Override
     public void addPage(String url, boolean isGateway) {
         Address address = new Address.Builder()
                 .withUrl(url)

@@ -17,6 +17,7 @@ package com.watchrabbit.crawler.manager.service;
 
 import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
+import com.watchrabbit.crawler.manager.model.Address;
 import java.util.List;
 
 /**
@@ -36,5 +37,7 @@ public interface ManagerService {
     void addPage(String url, boolean isGateway);
 
     void onCrawlError(CrawlForm form);
+
+    List<Address> findDiscoveredAddresses(int limit);
 
 }

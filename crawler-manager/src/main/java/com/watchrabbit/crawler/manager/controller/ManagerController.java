@@ -18,6 +18,7 @@ package com.watchrabbit.crawler.manager.controller;
 import com.watchrabbit.crawler.api.CrawlForm;
 import com.watchrabbit.crawler.api.CrawlResult;
 import com.watchrabbit.crawler.api.PageForm;
+import com.watchrabbit.crawler.manager.model.Address;
 import com.watchrabbit.crawler.manager.service.ManagerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,10 @@ public class ManagerController {
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public void addPage(@RequestBody PageForm form) {
         managerService.addPage(form.getUrl(), form.isGateway());
+    }
+
+    @RequestMapping(value = "/discovered", method = RequestMethod.GET)
+    public List<Address> getDiscovered(@RequestParam(defaultValue = "1000") int limit) {
+        return managerService.findDiscoveredAddresses(limit);
     }
 }
