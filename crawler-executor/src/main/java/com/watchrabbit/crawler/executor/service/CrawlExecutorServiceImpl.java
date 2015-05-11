@@ -46,27 +46,27 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrawlExecutorServiceImpl implements CrawlExecutorService {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(CrawlExecutorServiceImpl.class);
-
+    
     @Autowired
     AuthServiceFacade authServiceFacade;
-
+    
     @Autowired
     RemoteWebDriverFactory remoteWebDriverFactory;
-
+    
     @Autowired
     ManagerServiceFacade managerServiceFacade;
-
+    
     @Autowired
     LoaderService loaderService;
-
+    
     @Autowired
     KeywordGenerateStrategy keywordGenerateStrategy;
-
+    
     @Autowired(required = false)
     CrawlListener crawlListener = driver -> 0;
-
+    
     @Override
     public void processPage(CrawlForm form) {
         Collection<Cookie> session = authServiceFacade.getSession(form.getDomain());
@@ -74,7 +74,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
         try {
             Stopwatch stopwatch = Stopwatch.createStarted(() -> enableSession(driver, form, session));
             LOGGER.debug("Finished loading {} in {}", form.getUrl(), stopwatch.getExecutionTime(TimeUnit.MILLISECONDS));
-
+            
             List<LinkDto> links = collectLinks(driver).stream()
                     .map(link -> new LinkDto.Builder()
                             .withUrl(link)
@@ -103,19 +103,20 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                     .build()
             );
         } catch (Exception ex) {
+            LOGGER.error("Execption on processing page " + form.getUrl(), ex);
             managerServiceFacade.onError(form);
         } finally {
             remoteWebDriverFactory.returnWebDriver(driver);
         }
     }
-
+    
     private void enableSession(RemoteWebDriver driver, CrawlForm form, Collection<Cookie> session) {
         driver.get(form.getUrl());
         loaderService.waitFor(driver);
         if (!session.isEmpty()) {
             driver.manage().deleteAllCookies();
             session.forEach(driver.manage()::addCookie);
-
+            
             driver.get(form.getUrl());
             loaderService.waitFor(driver);
         }
@@ -127,10 +128,10 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 searchForm.submit.click();
                 loaderService.waitFor(driver);
             });
-
+            
         }
     }
-
+    
     private List<String> collectLinks(RemoteWebDriver driver) {
         return driver.findElements(By.xpath("//a")).stream()
                 .filter(element -> element.isDisplayed())
@@ -140,7 +141,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 .distinct()
                 .collect(toList());
     }
-
+    
     private Optional<SearchForm> findSearchInput(RemoteWebDriver driver) {
         for (WebElement form : driver.findElements(By.xpath("//form"))) {
             LOGGER.debug("Looking to form with action {}", form.getAttribute("action"));
@@ -161,17 +162,17 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
         LOGGER.error("Cannot find form in gateway page");
         return Optional.<SearchForm>empty();
     }
-
+    
     private class SearchForm {
-
+        
         WebElement input;
-
+        
         WebElement submit;
-
+        
         public SearchForm(WebElement input, WebElement submit) {
             this.input = input;
             this.submit = submit;
         }
-
+        
     }
 }
