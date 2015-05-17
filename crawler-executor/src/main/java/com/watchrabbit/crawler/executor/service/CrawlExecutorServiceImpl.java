@@ -149,7 +149,11 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                     .filter(input -> input.getAttribute("type").equals("text"))
                     .filter(input -> input.isDisplayed())
                     .collect(toList());
-            if (inputs.size() == 1) {
+            List<WebElement> passwords = form.findElements(By.xpath(".//input")).stream()
+                    .filter(input -> input.getAttribute("type").equals("password"))
+                    .filter(input -> input.isDisplayed())
+                    .collect(toList());
+            if (inputs.size() == 1 && passwords.isEmpty()) {
                 List<WebElement> submit = form.findElements(By.xpath(".//button[@type='submit']"));
                 if (submit.isEmpty()) {
                     submit = form.findElements(By.xpath(".//input[@type='submit']"));
