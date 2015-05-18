@@ -29,3 +29,11 @@ hs_err_pid*
 /crawler-batch/nb-configuration.xml
 /crawler-batch/target/
 /crawler-example/target/
+/pom.xml.versionsBackup
+/crawler-manager/pom.xml.versionsBackup
+/crawler-executor/pom.xml.versionsBackup
+/crawler-example/pom.xml.versionsBackup
+/crawler-driver/pom.xml.versionsBackup
+/crawler-batch/pom.xml.versionsBackup
+/crawler-auth/pom.xml.versionsBackup
+/crawler-api/pom.xml.versionsBackup
