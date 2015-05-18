@@ -4,7 +4,7 @@
 Watchrabbit - Crawler
 =====================
 
-Distributed crawler with full JavaScript support, browsing hidden and private web
+Distributed crawler with full JavaScript support, browsing hidden and private web.
 
 ## Powered by [watchrabbit.com]
 
