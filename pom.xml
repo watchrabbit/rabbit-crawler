@@ -17,7 +17,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.watchrabbit</groupId>
     <artifactId>rabbit-crawler</artifactId>
-    <version>8.0.1</version>
+    <version>8.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Watchrabbit - Crawler</name>
     <description>Crawler with full JavaScript support, browsing hidden and private web</description>
