@@ -44,6 +44,11 @@
         </dependency>
         
         
+        <dependency>
+            <artifactId>scanner-supervisor</artifactId>
+            <groupId>com.watchrabbit</groupId>
+            <version>0.8.1</version>
+        </dependency>
         
         <dependency>
             <groupId>com.watchrabbit</groupId>

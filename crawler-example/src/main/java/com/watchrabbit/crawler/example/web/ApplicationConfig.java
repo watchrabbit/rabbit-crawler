@@ -23,7 +23,7 @@ public class ApplicationConfig {
 
     @Bean
     public LinkFilter linkFilter() {
-        return (links) -> links.stream().filter(link -> InternetAddress.getDomainName(link.getUrl()).equals("scalingapp.com")).collect(toList());
+        return (links) -> links.stream().filter(link -> InternetAddress.getDomainName(link.getUrl()).equals("google.com")).collect(toList());
                 //                || InternetAddress.getDomainName(link.getUrl()).equals("watchrabbit.com")
 //                || InternetAddress.getDomainName(link.getUrl()).equals("api.watchrabbit.com")).collect(toList());
     }

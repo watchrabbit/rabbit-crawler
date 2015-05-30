@@ -65,7 +65,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
     KeywordGenerateStrategy keywordGenerateStrategy;
     
     @Autowired(required = false)
-    CrawlListener crawlListener = driver -> 0;
+    CrawlListener crawlListener = (pageId, driver) -> 0;
     
     @Override
     public void processPage(CrawlForm form) {
@@ -92,7 +92,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                         ).collect(toList())
                 );
             }
-            double importanceFactor = crawlListener.accept(driver);
+            double importanceFactor = crawlListener.accept(form.getId(), driver);
             managerServiceFacade.consumeResult(new CrawlResult.Builder()
                     .withDomain(form.getDomain())
                     .withMiliseconds(stopwatch.getExecutionTime(TimeUnit.MILLISECONDS))
