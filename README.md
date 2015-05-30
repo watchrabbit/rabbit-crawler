@@ -4,12 +4,12 @@
 Watchrabbit - Crawler
 =====================
 
-Distributed crawler with full JavaScript support, browsing hidden and private web
+Distributed crawler with full JavaScript support, browsing hidden and private web.
 
 ## Powered by [watchrabbit.com]
 
 ## Current release
-18/05/2015 rabbit-commons **0.8.0** released! Should appear in maven central shortly.
+18/05/2015 rabbit-crawler **0.8.0** released! Should appear in maven central shortly.
  
 
 [watchrabbit.com]:http://watchrabbit.com
