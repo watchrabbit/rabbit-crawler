@@ -9,7 +9,7 @@ Distributed crawler with full JavaScript support, browsing hidden and private we
 ## Powered by [watchrabbit.com]
 
 ## Current release
-18/05/2015 rabbit-crawler **0.8.0** released! Should appear in maven central shortly.
+30/05/2015 rabbit-crawler **0.8.1** released! Should appear in maven central shortly.
  
 
 [watchrabbit.com]:http://watchrabbit.com
