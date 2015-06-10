@@ -17,6 +17,8 @@ package com.watchrabbit.crawler.manager;
  */
 import com.watchrabbit.crawler.auth.EnableAuthService;
 import com.watchrabbit.crawler.executor.EnableExecutorService;
+import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
+import com.watchrabbit.crawler.manager.facade.LocalManagerServiceFacade;
 import com.watchrabbit.crawler.manager.policy.LinkFilter;
 import static java.util.stream.Collectors.toList;
 import org.junit.runner.RunWith;
@@ -39,6 +41,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootApplication
 @SpringApplicationConfiguration(classes = {ContextTestBase.class})
 public class ContextTestBase {
+
+    @Bean
+    public ManagerServiceFacade managerServiceFacade() {
+        return new LocalManagerServiceFacade();
+    }
 
     @Bean
     public LinkFilter linkFilter() {

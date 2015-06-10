@@ -15,11 +15,9 @@
  */
 package com.watchrabbit.crawler.manager;
 
-import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import com.watchrabbit.crawler.executor.service.CrawlExecutorService;
 import com.watchrabbit.crawler.manager.facade.ExecutorServiceFacade;
 import com.watchrabbit.crawler.manager.facade.LocalExecutorServiceFacade;
-import com.watchrabbit.crawler.manager.facade.LocalManagerServiceFacade;
 import com.watchrabbit.crawler.manager.policy.BasicRevisitPolicy;
 import com.watchrabbit.crawler.manager.policy.CleanupPolicy;
 import com.watchrabbit.crawler.manager.policy.DefaultCleanupPolicy;
@@ -49,12 +47,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @ComponentScan
 public class ManagerServiceConfig {
-
-    @Bean
-    @ConditionalOnClass(ManagerServiceFacade.class)
-    public ManagerServiceFacade managerServiceFacade() {
-        return new LocalManagerServiceFacade();
-    }
 
     @Bean
     @ConditionalOnClass(CrawlExecutorService.class)
