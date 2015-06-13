@@ -17,7 +17,6 @@ package com.watchrabbit.crawler.batch;
 
 import com.watchrabbit.crawler.batch.facade.DispatcherServiceFacade;
 import com.watchrabbit.crawler.batch.facade.LocalDispatcherServiceFacade;
-import com.watchrabbit.crawler.manager.service.ManagerService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,7 +33,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class BatchServiceConfig {
 
     @Bean
-    @ConditionalOnClass(ManagerService.class)
+    @ConditionalOnClass(name = "com.watchrabbit.crawler.manager.service.ManagerService")
     public DispatcherServiceFacade dispatcherServiceFacade() {
         return new LocalDispatcherServiceFacade();
     }

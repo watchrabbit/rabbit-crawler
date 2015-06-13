@@ -15,7 +15,6 @@
  */
 package com.watchrabbit.crawler.manager;
 
-import com.watchrabbit.crawler.executor.service.CrawlExecutorService;
 import com.watchrabbit.crawler.manager.facade.ExecutorServiceFacade;
 import com.watchrabbit.crawler.manager.facade.LocalExecutorServiceFacade;
 import com.watchrabbit.crawler.manager.policy.BasicRevisitPolicy;
@@ -49,7 +48,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class ManagerServiceConfig {
 
     @Bean
-    @ConditionalOnClass(CrawlExecutorService.class)
+    @ConditionalOnClass(name = "com.watchrabbit.crawler.executor.service.CrawlExecutorService")
     public ExecutorServiceFacade executorServiceFacade() {
         return new LocalExecutorServiceFacade();
     }

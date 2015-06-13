@@ -15,7 +15,6 @@
  */
 package com.watchrabbit.crawler.executor;
 
-import com.watchrabbit.crawler.auth.service.AuthService;
 import com.watchrabbit.crawler.driver.EnableWebDrivers;
 import com.watchrabbit.crawler.executor.facade.AuthServiceFacade;
 import com.watchrabbit.crawler.executor.facade.LocalAuthServiceClient;
@@ -37,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
 public class ExecutorServiceConfig {
 
     @Bean
-    @ConditionalOnClass(AuthService.class)
+    @ConditionalOnClass(name = "com.watchrabbit.crawler.auth.service.AuthService")
     public AuthServiceFacade authServiceFacade() {
         return new LocalAuthServiceClient();
     }
