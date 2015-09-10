@@ -11,7 +11,7 @@ Distributed crawler with full JavaScript support, browsing hidden and private we
 ## Current release
 30/05/2015 rabbit-crawler **8.0.2** released! Should appear in maven central shortly.
  
- # Running crawler
+ ## Running crawler
  
  To run crawler add depenencies to all modules of this application, and annotate your configuration class with `@EnableBatchService`, `@EnableAuthService`, `@EnableExecutorService` and `@EnableManagerService`.
  Then you need to implement `ManagerServiceFacade`
