@@ -37,6 +37,9 @@ Distributed crawler with full JavaScript support, browsing hidden and private we
  If you want to perform aditional logic on processed pages implement `CrawlListener`.
  As a final step add pages you want to crawl using `ManagerService` service or via REST endpoint defined in `ManagerController`. If your's site require auth add account data using `AuthService` serice or `AuthController` endpoint.
  
+ ## Building project
+ 
+ In order to build project run `mvn clean install`.
  
 
 [watchrabbit.com]:http://watchrabbit.com
