@@ -19,6 +19,7 @@ import com.watchrabbit.crawler.api.AuthData;
 import com.watchrabbit.crawler.auth.ContextTestBase;
 import com.watchrabbit.crawler.auth.repository.AuthDataRepository;
 import com.watchrabbit.crawler.driver.factory.RemoteWebDriverFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,12 +38,13 @@ public class AuthServiceIT extends ContextTestBase {
     @Autowired
     RemoteWebDriverFactory firefoxFactory;
 
+    @Ignore
     @Test
     public void shouldLogInIntoAngularApp() {
         authService.addNewAuthData(new AuthData.Builder()
                 .withDomain("api.watchrabbit.com")
-                .withLogin("mariusz.luciow@gmail.com")
-                .withPassword("wkswks12")
+                .withLogin("")
+                .withPassword("")
                 .withAuthEndpointUrl("https://api.watchrabbit.com/signin")
                 .withSessionDuration(60)
                 .build()

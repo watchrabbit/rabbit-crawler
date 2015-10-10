@@ -40,7 +40,7 @@ public class TaskScheduler {
     @Autowired
     DispatcherServiceFacade dispatcherServiceFacade;
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(initialDelayString = "${crawler.batch.delay:10000}")
     public void execute() {
         try {
             LOGGER.info("Starting address job");

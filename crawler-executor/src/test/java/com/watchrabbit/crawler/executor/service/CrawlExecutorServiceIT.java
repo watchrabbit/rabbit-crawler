@@ -23,6 +23,7 @@ import com.watchrabbit.crawler.executor.ContextTestBase;
 import com.watchrabbit.crawler.executor.facade.ManagerServiceFacade;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.reset;
@@ -93,12 +94,13 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
         assertThat(argumentCaptor.getValue().getLinks()).isNotEmpty();
     }
 
+    @Ignore
     @Test
     public void shouldLogInAndCollect() {
         authService.addNewAuthData(new AuthData.Builder()
                 .withDomain("api.watchrabbit.com")
-                .withLogin("mariusz.luciow@gmail.com")
-                .withPassword("wkswks12")
+                .withLogin("")
+                .withPassword("")
                 .withAuthEndpointUrl("https://api.watchrabbit.com/signin")
                 .build()
         );

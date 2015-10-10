@@ -24,6 +24,7 @@ import com.watchrabbit.crawler.manager.repository.AddressRepository;
 import com.watchrabbit.crawler.manager.util.InternetAddress;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,12 +43,13 @@ public class ManagerServiceIT extends ContextTestBase {
     @Autowired
     AuthService authService;
 
+    @Ignore
     @Test
     public void shouldProcessTest() {
         authService.addNewAuthData(new AuthData.Builder()
                 .withDomain("api.watchrabbit.com")
-                .withLogin("mariusz.luciow@gmail.com")
-                .withPassword("wkswks12")
+                .withLogin("")
+                .withPassword("")
                 .withAuthEndpointUrl("https://api.watchrabbit.com/signin")
                 .withSessionDuration(60)
                 .build()

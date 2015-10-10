@@ -51,10 +51,10 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
         RemoteWebDriver driver2 = null;
         try {
             driver = firefoxFactory.produceDriver();
-            driver.get("https://watchrabbit.com:4848/");
+            driver.get("https://verif.pl:4848/");
 
             driver2 = firefoxFactory.produceDriver();
-            driver2.get("https://watchrabbit.com:4848/");
+            driver2.get("https://verif.pl:4848/");
 
             driver2.manage().deleteAllCookies();
             driver2.manage().addCookie(driver.manage().getCookieNamed("JSESSIONID"));
@@ -70,16 +70,6 @@ public class FirefoxWebDriverFactoryIT extends ContextTestBase {
     public void shouldWaitForLoad() {
         RemoteWebDriver driver = firefoxFactory.produceDriver();
         driver.get("https://scalingapp.com");
-        loaderService.waitFor(driver);
-
-        firefoxFactory.returnWebDriver(driver);
-    }
-
-    @Test
-    public void shouldWaitForLoad2() {
-        RemoteWebDriver driver = firefoxFactory.produceDriver();
-        driver.get("https://api.watchrabbit.com/signin");
-
         loaderService.waitFor(driver);
 
         firefoxFactory.returnWebDriver(driver);

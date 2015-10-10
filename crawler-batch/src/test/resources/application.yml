@@ -1,1 +1,3 @@
 logging.level.com.watchrabbit.crawler: DEBUG
+
+crawler.batch.delay: 1000
