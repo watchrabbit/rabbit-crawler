@@ -94,6 +94,21 @@ public class CrawlExecutorServiceIT extends ContextTestBase {
         assertThat(argumentCaptor.getValue().getLinks()).isNotEmpty();
     }
 
+    @Test
+    public void shouldBrowseHiddenWeb2() {
+        crawlExecutorService.processPage(new CrawlForm.Builder()
+                .withDomain("pl.wikipedia.org")
+                .withKeyword("foo")
+                .withUrl("http://pl.wikipedia.org")
+                .build()
+        );
+
+        ArgumentCaptor<CrawlResult> argumentCaptor = ArgumentCaptor.forClass(CrawlResult.class);
+        verify(managerServiceFacade).consumeResult(argumentCaptor.capture());
+
+        assertThat(argumentCaptor.getValue().getLinks()).isNotEmpty();
+    }
+
     @Ignore
     @Test
     public void shouldLogInAndCollect() {

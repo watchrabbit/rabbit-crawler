@@ -146,7 +146,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
         for (WebElement form : driver.findElements(By.xpath("//form"))) {
             LOGGER.debug("Looking to form with action {}", form.getAttribute("action"));
             List<WebElement> inputs = form.findElements(By.xpath(".//input")).stream()
-                    .filter(input -> input.getAttribute("type").equals("text"))
+                    .filter(input -> input.getAttribute("type").equals("text") || input.getAttribute("type").equals("search"))
                     .filter(input -> input.isDisplayed())
                     .collect(toList());
             List<WebElement> passwords = form.findElements(By.xpath(".//input")).stream()
