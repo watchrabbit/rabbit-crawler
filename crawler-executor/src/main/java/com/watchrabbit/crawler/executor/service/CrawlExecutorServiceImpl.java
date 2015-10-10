@@ -158,7 +158,7 @@ public class CrawlExecutorServiceImpl implements CrawlExecutorService {
                 if (submit.isEmpty()) {
                     submit = form.findElements(By.xpath(".//input[@type='submit']"));
                 }
-                if (submit.size() == 1) {
+                if (!submit.isEmpty()) {
                     return Optional.of(new SearchForm(inputs.get(0), submit.get(0)));
                 }
             }
