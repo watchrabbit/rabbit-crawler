@@ -107,7 +107,7 @@ public class ManagerServiceImpl implements ManagerService {
         Address address = addressRepository.find(id);
         LOGGER.info("Pushing {} to execution with keyword {}", address.getUrl(), address.getKeyword());
         etiquettePolicy.onDomainProcessing(address.getDomainName());
-        leaseService.createLease(address.getUrl(), urlProcessingTimeout);
+        leaseService.createLease(address.getId(), urlProcessingTimeout);
         executorServiceFacade.processPage(new CrawlForm.Builder()
                 .withDomain(address.getDomainName())
                 .withUrl(address.getUrl())
@@ -137,7 +137,7 @@ public class ManagerServiceImpl implements ManagerService {
                 .distinct()
                 .map(wrapper -> wrapper.address)
                 .filter(address -> etiquettePolicy.canProcessDomain(address.getDomainName()))
-                .filter(address -> !leaseService.hasLease(address.getUrl()))
+                .filter(address -> !leaseService.hasLease(address.getId()))
                 .map(adress -> adress.getId())
                 .limit(limit)
                 .collect(toList());
