@@ -137,7 +137,7 @@ public class ManagerServiceImpl implements ManagerService {
                 .distinct()
                 .map(wrapper -> wrapper.address)
                 .filter(address -> etiquettePolicy.canProcessDomain(address.getDomainName()))
-                .filter(address -> !leaseService.hasLease(address.getId()))
+                .filter(address -> !leaseService.hasLease(address.getUrl()))
                 .map(adress -> adress.getId())
                 .limit(limit)
                 .collect(toList());
